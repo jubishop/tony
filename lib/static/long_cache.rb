@@ -11,8 +11,7 @@ module Tony
             'Cache-Control': 'public, max-age=31536000, immutable'
           }
         }.merge(options)
-        @file_server = Rack::File.new(::File.join(Dir.pwd,
-                                                  @options[:public_folder]))
+        @file_server = Rack::File.new(@options[:public_folder])
       end
 
       def call(env)
