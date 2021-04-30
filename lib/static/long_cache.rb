@@ -23,7 +23,7 @@ module Tony
         return @app.call(env) if status == 404
 
         @options[:headers].each { |name, value|
-          headers[name] = value
+          headers[name.to_s] = value.to_s
         }
         return [status, headers, body]
       end
