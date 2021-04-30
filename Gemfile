@@ -1,6 +1,8 @@
 ruby '>= 3'
 
-gem 'rack'
+source 'https://rubygems.org' do
+  gem 'rack'
+end
 
 # defaults
 group :development do
