@@ -1,3 +1,3 @@
-Dir.glob('**/*.rb').each { |file|
+Dir.glob("#{File.dirname(__FILE__)}/**/*.rb").each { |file|
   require_relative file
 }
