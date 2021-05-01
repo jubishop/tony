@@ -38,5 +38,11 @@ RSpec.describe(Tony::Static, type: :rack_test) {
       expect(last_response.status).to(eq(200))
       expect(last_response.body).to(eq("body { color: white; }\n"))
     }
+
+    it('returns cache-control public, immutable, and long') {
+      get '/test.css'
+      expect(last_response.headers['Cache-Control']).to(
+          eq('public, max-age=31536000, immutable'))
+    }
   }
 }
