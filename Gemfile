@@ -3,6 +3,7 @@ ruby '>= 3'
 source 'https://www.rubygems.org' do
   gem 'base64'
   gem 'rack'
+  gem 'rack-contrib'
 end
 
 source 'https://www.jubigems.org' do
@@ -12,6 +13,8 @@ end
 # defaults
 group :development do
   source 'https://www.rubygems.org' do
+    gem 'capybara'
+    gem 'rack-test'
     gem 'rake'
     gem 'rspec'
     gem 'rubocop'

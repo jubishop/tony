@@ -1,8 +1,9 @@
 require 'rack'
+require 'rack/contrib'
 
 module Tony
   class Static
-    def initialize(app, **options)
+    def initialize(app = Rack::NotFound.new, **options)
       @app = app
       @options = {
         public_folder: 'public',

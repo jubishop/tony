@@ -1,4 +1,19 @@
-# See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require 'capybara/rspec'
+require 'rack'
+require 'rack/test'
+
+require_relative 'helpers/cookies'
+
+RSpec.shared_context(:rack_test) do
+  include Capybara::RSpecMatchers
+  include Rack::Test::Methods
+  include RSpec::Cookies
+
+  after(:each) {
+    clear_cookies
+  }
+end
+
 RSpec.configure do |config|
   config.expect_with(:rspec) do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
@@ -15,4 +30,11 @@ RSpec.configure do |config|
 
   config.order = :random
   Kernel.srand(config.seed)
+
+  config.include_context(:rack_test, type: :rack_test)
+
+  config.before(:each) {
+    ENV['RACK_ENV'] = 'test'
+    ENV['APP_ENV'] = 'test'
+  }
 end
