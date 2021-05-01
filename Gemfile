@@ -1,12 +1,12 @@
 ruby '>= 3'
 
 source 'https://www.rubygems.org' do
+  gem 'base64'
   gem 'rack'
 end
 
 source 'https://www.jubigems.org' do
   gem 'core'
-  gem 'single-instance'
 end
 
 # defaults

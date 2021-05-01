@@ -1,8 +1,13 @@
-require_relative '../lib/crypt'
+require_relative '../lib/utils/crypt'
 
-RSpec.describe(Tony::Crypt) {
+RSpec.describe(Tony::Utils::Crypt) {
   it('encrypts and decrypts to the same thing') {
-    crypt = Tony::Crypt.instance('test secret')
-    expect(crypt.de(crypt.en('hello'))).to(eq('hello'))
+    crypt = Tony::Utils::Crypt.new('test secret')
+    %w[hello world].each { |message|
+      encrypted = crypt.en(message)
+      expect(encrypted).to_not(eq(message))
+      decrypted = crypt.de(encrypted)
+      expect(decrypted).to(eq(message))
+    }
   }
 }
