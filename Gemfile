@@ -1,12 +1,17 @@
 ruby '>= 3'
 
-source 'https://rubygems.org' do
+source 'https://www.rubygems.org' do
   gem 'rack'
+end
+
+source 'https://www.jubigems.org' do
+  gem 'core'
+  gem 'single-instance'
 end
 
 # defaults
 group :development do
-  source 'https://rubygems.org' do
+  source 'https://www.rubygems.org' do
     gem 'rake'
     gem 'rspec'
     gem 'rubocop'
