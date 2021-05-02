@@ -6,7 +6,7 @@ require 'tony/test'
 RSpec.shared_context(:rack_test) do
   include Capybara::RSpecMatchers
   include Rack::Test::Methods
-  include Tony::Test::RSpec::Cookies
+  include Tony::Test::Rack::Cookies
 
   let(:cookie_secret) { 'test secret' }
 
