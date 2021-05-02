@@ -18,7 +18,9 @@ module Tony
         HTML
         return [
           301,
-          { "Content-Type": 'text/html', Location: location },
+          # rubocop:disable Style/StringHashKeys
+          { 'Content-Type' => 'text/html', 'Location' => location },
+          # rubocop:enable Style/StringHashKeys
           [body]
         ]
       end
