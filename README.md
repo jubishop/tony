@@ -6,16 +6,13 @@ Tony Bennett is way better than Sinatra.
 
 ## Installation
 
-### Global installation
-
-```zsh
-gem install tony --source https://www.jubigems.org/
-```
-
 ### In a Gemfile
 
 ```ruby
-gem 'tony', source: 'https://www.jubigems.org/'
+source: 'https://www.jubigems.org/'
+  gem 'core'
+  gem 'tony'
+end
 ```
 
 ## Usage
