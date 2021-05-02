@@ -1,5 +1,3 @@
-require 'sinatra/base'
-
 module Tony
   module AssetTagHelper
     def favicon_link_tag(source = :favicon,
