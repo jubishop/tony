@@ -6,6 +6,7 @@ module Tony
     end
 
     def call(env)
+      req = Rack::Request.new(env)
       if req.scheme == 'http' || req.env['HTTP_X_FORWARDED_SSL'] == 'off'
         location = "https://#{req.host_with_port}#{req.fullpath}"
         body = <<~HTML
