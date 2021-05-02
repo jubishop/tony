@@ -2,12 +2,12 @@ require 'capybara/rspec'
 require 'rack'
 require 'rack/test'
 
-require_relative 'helpers/cookies'
+require_relative '../lib/rspec/cookies'
 
 RSpec.shared_context(:rack_test) do
   include Capybara::RSpecMatchers
   include Rack::Test::Methods
-  include RSpec::Cookies
+  include Tony::RSpec::Cookies
 
   after(:each) {
     clear_cookies
