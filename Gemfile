@@ -10,7 +10,6 @@ source 'https://www.jubigems.org' do
   gem 'core'
 end
 
-# defaults
 group :development do
   source 'https://www.rubygems.org' do
     gem 'capybara'
@@ -25,6 +24,7 @@ group :development do
 
   source 'https://www.jubigems.org' do
     gem 'rakegem'
+    gem 'tony-test'
   end
 end
 
