@@ -1,11 +1,9 @@
 module Tony
   module AssetTagHelper
     def favicon_link_tag(source = :favicon,
-                         rel: 'shortcut icon',
-                         type: 'image/x-icon')
+                         rel: 'icon')
       %(<link rel="#{rel}"
-              href="#{Private.static_url(self, source, 'ico')}"
-              type="#{type}" />)
+              href="#{Private.static_url(self, source, 'ico')}" />)
     end
 
     def preconnect_link_tag(source)

@@ -34,7 +34,7 @@ RSpec.configure do |config|
 
   config.include_context(:rack_test, type: :rack_test)
 
-  config.before(:each) {
+  config.after(:each) {
     ENV['APP_ENV'] = 'test'
     ENV['RACK_ENV'] = 'test'
   }
