@@ -1,40 +1,52 @@
 RSpec.describe(Tony::App, type: :rack_test) {
   let(:app) { @app }
-  before(:each) {
-    @app = Tony::App.new
-  }
 
-  context('simple route matching') {
-    it('matches / page') {
-      app.get('/') {
-        return 'Hello World'
+  context('simple getter') {
+    before(:each) {
+      @app = Tony::App.new
+      app.get('/') { |_, resp|
+        resp.body = 'Hello World'
+        resp.status = 418
+        resp.headers[:CUSTOM] = 'HEADER'
       }
       get '/'
+    }
 
-      expect(last_response.ok?).to(be(true))
+    it('returns body') {
       expect(last_response.body).to(eq('Hello World'))
     }
-  }
 
-  context('custom status') {
     it('passes on custom status') {
-      app.get('/') {
-        return 'Hello World', 418
-      }
-      get '/'
-
       expect(last_response.status).to(be(418))
+    }
+
+    it('passes on custom headers') {
+      expect(last_response.headers['CUSTOM']).to(eq('HEADER'))
+    }
+
+    it('sets content-length') {
+      expect(last_response.headers['Content-Length']).to(eq(11))
+    }
+
+    it('sets content type') {
+      expect(last_response.headers['Content-Type']).to(
+          eq('text/html;charset=utf-8'))
+    }
+
+    it('returns 404 when not found') {
+      get '/does_not_exist'
+      expect(last_response.status).to(be(404))
     }
   }
 
-  context('custom headers') {
-    it('passes on custom headers') {
-      app.get('/') {
-        return 'Hello World', 418, CUSTOM: 'HEADER'
-      }
-      get '/'
+  context('as middleware') {
+    before(:each) {
+      @app = Tony::App.new(->(_) { [418, {}, []] })
+    }
 
-      expect(last_response.headers['CUSTOM']).to(eq('HEADER'))
+    it('continues to next app') {
+      get '/'
+      expect(last_response.status).to(eq(418))
     }
   }
 }
