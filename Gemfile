@@ -6,10 +6,6 @@ source 'https://www.rubygems.org' do
   gem 'rack-contrib'
 end
 
-source 'https://www.jubigems.org' do
-  gem 'core'
-end
-
 group :development do
   source 'https://www.rubygems.org' do
     gem 'capybara'

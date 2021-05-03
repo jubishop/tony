@@ -10,7 +10,6 @@ Tony Bennett is way better than Sinatra.
 
 ```ruby
 source: 'https://www.jubigems.org/'
-  gem 'core'
   gem 'tony'
 end
 ```

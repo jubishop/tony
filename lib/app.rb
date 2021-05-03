@@ -1,5 +1,6 @@
-require 'core'
 require 'rack'
+
+require_relative 'response'
 
 module Tony
   class App
@@ -37,16 +38,6 @@ module Tony
         return @path.match(path) if @path.is_a?(Regexp)
 
         return path == @path
-      end
-    end
-
-    class Response < Rack::Response
-      undef :body= # use write()
-
-      def finish
-        headers.transform_keys!(&:to_s)
-        headers['Content-Type'] ||= 'text/html;charset=utf-8'
-        return super
       end
     end
   end
