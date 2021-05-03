@@ -18,6 +18,7 @@ RSpec.describe(Tony::App, type: :rack_test) {
 
     expect(last_response.status).to(be(200))
   }
+
   it('does not allow writing to body') {
     @app = Tony::App.new
     app.get('/', ->(_, resp) {
@@ -25,6 +26,17 @@ RSpec.describe(Tony::App, type: :rack_test) {
     })
 
     expect { get('/') }.to(raise_error(NoMethodError))
+  }
+
+  it('uses not_found if called') {
+    @app = Tony::App.new
+    app.not_found(->(_, resp) {
+      resp.write('Not Found')
+    })
+    get '/'
+
+    expect(last_response.status).to(be(404))
+    expect(last_response.body).to(eq('Not Found'))
   }
 
   context('simple getter') {

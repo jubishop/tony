@@ -11,16 +11,27 @@ module Tony
 
     def call(env)
       req = Rack::Request.new(env)
+      resp = Response.new
+
       @routes[req.request_method].each { |route|
         next unless (match = route.match?(req.path))
 
         puts match if match.is_a?(MatchData) # TODO: named_captures
-        resp = Response.new
         route.block.call(req, resp)
         return resp.finish
       }
 
+      if @not_found_block
+        resp.status = 404
+        @not_found_block.call(req, resp)
+        return resp.finish
+      end
+
       return @app.call(env)
+    end
+
+    def not_found(block)
+      @not_found_block = block
     end
 
     def get(path, block)
