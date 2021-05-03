@@ -1,6 +1,16 @@
 RSpec.describe(Tony::App, type: :rack_test) {
   let(:app) { @app }
 
+  it('returns default 200 status on get') {
+    @app = Tony::App.new
+    app.get('/') { |_, resp|
+      resp.body = 'Hello World'
+    }
+    get '/'
+
+    expect(last_response.status).to(be(200))
+  }
+
   context('simple getter') {
     before(:each) {
       @app = Tony::App.new

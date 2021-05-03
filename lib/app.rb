@@ -5,22 +5,37 @@ module Tony
   class App
     def initialize(app = Rack::NotFound.new, **options)
       @app, @options = app, options
-      @gets = []
+      @routes = Hash.new { |hash, key| hash[key] = [] }
     end
 
     def call(env)
       req = Rack::Request.new(env)
-      if req.get? && (route = @gets.find { |get| get.match?(req.path) })
+      @routes[req.request_method].each { |route|
+        next unless (match = route.match?(req.path))
+
+        puts match if match.is_a?(MatchData) # TODO: named_captures
         resp = Response.new
         route.block.run(req, resp)
         return resp.finish
-      end
+      }
 
       return @app.call(env)
     end
 
     def get(path, &block)
-      @gets.push(Route.new(path, block))
+      @routes['GET'].push(Route.new(path, block))
+    end
+
+    def search(req, routes, status)
+      routes.each { |route|
+        next unless (match = route.match?(req.path))
+
+        puts match if match.is_a?(MatchData)
+        resp = Response.new(status)
+        route.block.run(req, resp)
+        return resp.finish
+      }
+      return false
     end
 
     class Route
@@ -31,7 +46,9 @@ module Tony
       end
 
       def match?(path)
-        return true if path == @path
+        return @path.match(path) if @path.is_a?(Regexp)
+
+        return path == @path
       end
     end
 
