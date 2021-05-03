@@ -12,19 +12,15 @@ module Tony
               crossorigin />)
     end
 
-    def stylesheet_link_tag(*sources, media: 'screen')
-      sources.map { |source|
-        %(<link rel="stylesheet"
-                href="#{Private.static_url(self, source, 'css')}"
-                media="#{media}" />)
-      }.join("\n")
+    def stylesheet_link_tag(source, media: 'screen')
+      %(<link rel="stylesheet"
+              href="#{Private.static_url(self, source, 'css')}"
+              media="#{media}" />)
     end
 
-    def javascript_include_tag(*sources, crossorigin: :anonymous)
-      sources.map { |source|
-        %(<script src="#{Private.static_url(self, source, 'js')}"
-                  crossorigin="#{crossorigin}"></script>)
-      }.join("\n")
+    def javascript_include_tag(source, crossorigin: :anonymous)
+      %(<script src="#{Private.static_url(self, source, 'js')}"
+                crossorigin="#{crossorigin}"></script>)
     end
 
     def google_fonts(*fonts)
