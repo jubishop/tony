@@ -17,7 +17,7 @@ module Tony
         next unless (match = route.match?(req.path))
 
         puts match if match.is_a?(MatchData) # TODO: named_captures
-        route.block.call(req, resp)
+        catch(:response) { route.block.call(req, resp) }
         return resp.finish
       }
 
