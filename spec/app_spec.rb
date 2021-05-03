@@ -11,7 +11,7 @@ RSpec.describe(Tony::App, type: :rack_test) {
 
   it('deals with returning from a block') {
     @app = Tony::App.new
-    app.get('/', lambda { |_, _|
+    app.get('/', ->(_, _) {
       return
     })
     get '/'
@@ -20,7 +20,7 @@ RSpec.describe(Tony::App, type: :rack_test) {
   }
   it('does not allow writing to body') {
     @app = Tony::App.new
-    app.get('/', lambda { |_, resp|
+    app.get('/', ->(_, resp) {
       resp.body = 'Hello World'
     })
 
@@ -30,7 +30,7 @@ RSpec.describe(Tony::App, type: :rack_test) {
   context('simple getter') {
     before(:each) {
       @app = Tony::App.new
-      app.get('/', lambda { |_, resp|
+      app.get('/', ->(_, resp) {
         resp.write('Hello World')
         resp.status = 418
         resp.headers[:CUSTOM] = 'HEADER'

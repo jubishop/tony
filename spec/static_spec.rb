@@ -13,7 +13,7 @@ RSpec.describe(Tony::Static, type: :rack_test) {
 
     it('calls next middleware') {
       def app
-        next_app = lambda { |_|
+        next_app = ->(_) {
           [418, { "Content-Type": 'text/plain' }, ["I'm a teapot'"]]
         }
         Tony::Static.new(next_app)
