@@ -9,7 +9,6 @@ RSpec.describe(Tony::App, type: :rack_test) {
     it('returns default 200 status on get') {
       app.get('/', ->(_, resp) {})
       get '/'
-
       expect(last_response.status).to(be(200))
     }
 
@@ -19,7 +18,6 @@ RSpec.describe(Tony::App, type: :rack_test) {
         return
       })
       get '/'
-
       expect(last_response.status).to(be(200))
       expect(last_response.body).to(eq('Heyo'))
     }
@@ -30,7 +28,6 @@ RSpec.describe(Tony::App, type: :rack_test) {
         throw(:response)
       })
       get '/'
-
       expect(last_response.status).to(be(200))
       expect(last_response.body).to(eq('Ok'))
     }
@@ -40,7 +37,6 @@ RSpec.describe(Tony::App, type: :rack_test) {
         resp.write('Not Found')
       })
       get '/'
-
       expect(last_response.status).to(be(404))
       expect(last_response.body).to(eq('Not Found'))
     }
@@ -53,9 +49,19 @@ RSpec.describe(Tony::App, type: :rack_test) {
         resp.write(resp.error.message)
       })
       get '/'
-
       expect(last_response.status).to(be(500))
       expect(last_response.body).to(eq('Whoopsydaisy'))
+    }
+
+    it('rewrites a getter if same path passed twice') {
+      app.get('/', ->(_, resp) {
+        resp.write('Should Not See')
+      })
+      app.get('/', ->(_, resp) {
+        resp.write('Hello World')
+      })
+      get '/'
+      expect(last_response.body).to(eq('Hello World'))
     }
   }
 
@@ -103,12 +109,38 @@ RSpec.describe(Tony::App, type: :rack_test) {
     }
 
     it('adds named captures to the params') {
-      @app.get(%r{^/(?<artist>.+?)/(?<album>.+?)$}, ->(req, resp) {
+      app.get(%r{^/artist/(?<artist>.+?)/(?<album>.+?)$}, ->(req, resp) {
         resp.write("#{req.params[:artist]}: #{req.params[:album]}")
       })
-
-      get '/Tony_Bennett/For_Once_in_My_Life'
+      get '/artist/Tony_Bennett/For_Once_in_My_Life'
       expect(last_response.body).to(eq('Tony_Bennett: For_Once_in_My_Life'))
+    }
+
+    it('fails gracefully when nothing found') {
+      app.get(%r{^/artist/(?<artist>.+?)/(?<album>.+?)$}, ->(req, resp) {
+        resp.write("#{req.params[:artist]}: #{req.params[:album]}")
+      })
+      get '/not_found'
+      expect(last_response.status).to(be(404))
+    }
+  }
+
+  context('simple regex') {
+    before(:each) {
+      @app = Tony::App.new
+      app.get(%r{^/artist$}, ->(_, resp) {
+        resp.write('Hello World')
+      })
+    }
+
+    it('matches on regex') {
+      get '/artist'
+      expect(last_response.body).to(eq('Hello World'))
+    }
+
+    it('fails gracefully when nothing found') {
+      get '/actor'
+      expect(last_response.status).to(be(404))
     }
   }
 
@@ -156,7 +188,6 @@ RSpec.describe(Tony::App, type: :rack_test) {
       })
       set_cookie('tony', 'bennett')
       get '/'
-
       expect(last_response.body).to(eq('bennett'))
     }
 
@@ -167,7 +198,6 @@ RSpec.describe(Tony::App, type: :rack_test) {
       })
       set_cookie('tony', 'bennett')
       get '/'
-
       expect(last_response.body).to(eq(''))
     }
   }

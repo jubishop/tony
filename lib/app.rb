@@ -8,14 +8,14 @@ module Tony
   class App
     def initialize(**options)
       @options = options
-      @routes = Hash.new { |hash, key| hash[key] = [] }
+      @routes = Hash.new { |hash, key| hash[key] = {} }
     end
 
     def call(env)
       req = Request.new(env, **@options)
       resp = Response.new(**@options)
 
-      @routes[req.request_method].each { |route|
+      @routes[req.request_method].each_value { |route|
         next unless (match = route.match?(req.path))
 
         req.params.merge!(match.named_captures) if match.is_a?(MatchData)
@@ -47,7 +47,7 @@ module Tony
     end
 
     def get(path, block)
-      @routes['GET'].push(Route.new(path, block))
+      @routes['GET'][path] = Route.new(path, block)
     end
 
     class Route
