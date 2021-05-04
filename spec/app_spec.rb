@@ -114,7 +114,7 @@ RSpec.describe(Tony::App, type: :rack_test) {
 
   context('cookie management') {
     it('sets cookies in response') {
-      @app = Tony::App.new(cookie_secret: 'fly_me_to_the_moon')
+      @app = Tony::App.new(secret: 'fly_me_to_the_moon')
       app.get('/', ->(_, resp) {
         resp.set_cookie('tony', 'bennett')
       })
@@ -123,7 +123,7 @@ RSpec.describe(Tony::App, type: :rack_test) {
     }
 
     it('gets cookies from request') {
-      @app = Tony::App.new(cookie_secret: 'fly_me_to_the_moon')
+      @app = Tony::App.new(secret: 'fly_me_to_the_moon')
       app.get('/', ->(req, resp) {
         resp.write(req.get_cookie('tony'))
       })

@@ -1,7 +1,11 @@
 require 'rack'
 
+require_relative 'utils/cryptable'
+
 module Tony
   class Request < Rack::Request
+    include Cryptable
+
     def initialize(env, **options)
       super(env)
       @options = options
@@ -9,18 +13,6 @@ module Tony
 
     def get_cookie(key)
       return crypt.de(cookies[key])
-    end
-
-    private
-
-    def crypt
-      return @crypt if @crypt
-
-      unless @options.key?(:cookie_secret)
-        raise(ArgumentError, 'Need :cookie_secret')
-      end
-
-      return @crypt = Utils::Crypt.new(@options[:cookie_secret])
     end
   end
 end
