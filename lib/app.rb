@@ -49,19 +49,14 @@ module Tony
     def get(path, block)
       @routes['GET'][path] = Route.new(path, block)
     end
-
-    class Route
-      attr_accessor :path, :block
-
-      def initialize(path, block)
-        @path, @block = path, block
-      end
-
-      def match?(path)
-        return @path.match(path) if @path.is_a?(Regexp)
-
-        return path == @path
-      end
-    end
   end
+
+  Route = Struct.new(:path, :block) {
+    def match?(path)
+      return self.path.match(path) if self.path.is_a?(Regexp)
+
+      return self.path == path
+    end
+  }
+  private_constant :Route
 end
