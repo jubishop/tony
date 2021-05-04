@@ -2,6 +2,8 @@ require 'rack'
 
 module Tony
   class Response < Rack::Response
+    attr_accessor :error
+
     undef :body= # use write()
 
     def finish

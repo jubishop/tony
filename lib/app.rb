@@ -1,5 +1,7 @@
+require 'core'
 require 'rack'
 
+require_relative 'request'
 require_relative 'response'
 
 module Tony
@@ -10,14 +12,24 @@ module Tony
     end
 
     def call(env)
-      req = Rack::Request.new(env)
+      req = Request.new(env)
       resp = Response.new
 
       @routes[req.request_method].each { |route|
         next unless (match = route.match?(req.path))
 
-        puts match if match.is_a?(MatchData) # TODO: named_captures
-        catch(:response) { route.block.call(req, resp) }
+        req.params.merge!(match.named_captures) if match.is_a?(MatchData)
+        req.params.symbolize_keys!
+        begin
+          catch(:response) { route.block.call(req, resp) }
+        rescue StandardError => error
+          raise error unless @error_block
+
+          resp.error = error
+          resp.status = 500
+          @error_block.call(req, resp)
+        end
+
         return resp.finish
       }
 
@@ -32,6 +44,10 @@ module Tony
 
     def not_found(block)
       @not_found_block = block
+    end
+
+    def error(block)
+      @error_block = block
     end
 
     def get(path, block)

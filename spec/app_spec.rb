@@ -35,15 +35,7 @@ RSpec.describe(Tony::App, type: :rack_test) {
       expect(last_response.body).to(eq('Ok'))
     }
 
-    it('does not allow writing to body') {
-      app.get('/', ->(_, resp) {
-        resp.body = 'Hello World'
-      })
-
-      expect { get('/') }.to(raise_error(NoMethodError))
-    }
-
-    it('uses not_found if called') {
+    it('uses not_found() if route is not found') {
       app.not_found(->(_, resp) {
         resp.write('Not Found')
       })
@@ -51,6 +43,19 @@ RSpec.describe(Tony::App, type: :rack_test) {
 
       expect(last_response.status).to(be(404))
       expect(last_response.body).to(eq('Not Found'))
+    }
+
+    it('uses error() if an exception is raised') {
+      app.get('/', ->(_, _) {
+        raise StandardError, 'Whoopsydaisy'
+      })
+      app.error(->(_, resp) {
+        resp.write(resp.error.message)
+      })
+      get '/'
+
+      expect(last_response.status).to(be(500))
+      expect(last_response.body).to(eq('Whoopsydaisy'))
     }
   }
 
@@ -89,6 +94,21 @@ RSpec.describe(Tony::App, type: :rack_test) {
     it('returns 404 when not found') {
       get '/does_not_exist'
       expect(last_response.status).to(be(404))
+    }
+  }
+
+  context('with named captures') {
+    before(:each) {
+      @app = Tony::App.new
+    }
+
+    it('adds named captures to the params') {
+      @app.get(%r{^/(?<artist>.+?)/(?<album>.+?)$}, ->(req, resp) {
+        resp.write("#{req.params[:artist]}: #{req.params[:album]}")
+      })
+
+      get '/Tony_Bennett/For_Once_in_My_Life'
+      expect(last_response.body).to(eq('Tony_Bennett: For_Once_in_My_Life'))
     }
   }
 
