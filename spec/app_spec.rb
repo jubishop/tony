@@ -147,5 +147,28 @@ RSpec.describe(Tony::App, type: :rack_test) {
       })
       expect { get('/') }.to(raise_error(KeyError))
     }
+
+    it('uses :old_secret when it exists') {
+      @app = Tony::App.new(secret: 'for_once_in_my_life',
+                           old_secret: 'fly_me_to_the_moon')
+      app.get('/', ->(req, resp) {
+        resp.write(req.get_cookie('tony'))
+      })
+      set_cookie('tony', 'bennett')
+      get '/'
+
+      expect(last_response.body).to(eq('bennett'))
+    }
+
+    it('returns empty string if your secret is wrong') {
+      @app = Tony::App.new(secret: 'for_once_in_my_life')
+      app.get('/', ->(req, resp) {
+        resp.write(req.get_cookie('tony'))
+      })
+      set_cookie('tony', 'bennett')
+      get '/'
+
+      expect(last_response.body).to(eq(''))
+    }
   }
 }

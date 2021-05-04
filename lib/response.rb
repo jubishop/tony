@@ -1,11 +1,7 @@
 require 'rack'
 
-require_relative 'utils/cryptable'
-
 module Tony
   class Response < Rack::Response
-    include Cryptable
-
     undef :body= # use write()
 
     attr_accessor :error
@@ -27,8 +23,8 @@ module Tony
 
     private
 
-    def secret
-      return @options.fetch(:secret)
+    def crypt
+      return @crypt ||= Utils::Crypt.new(@options.fetch(:secret))
     end
   end
 end

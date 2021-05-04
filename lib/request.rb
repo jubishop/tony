@@ -1,24 +1,26 @@
 require 'rack'
 
-require_relative 'utils/cryptable'
-
 module Tony
   class Request < Rack::Request
-    include Cryptable
-
     def initialize(env, **options)
       super(env)
       @options = options
     end
 
     def get_cookie(key)
-      return crypt.de(cookies[key])
+      return crypt.de(cookies[key]) || old_crypt&.de(cookies[key])
     end
 
     private
 
-    def secret
-      return @options.fetch(:secret)
+    def crypt
+      return @crypt ||= Utils::Crypt.new(@options.fetch(:secret))
+    end
+
+    def old_crypt
+      return unless @options.key?(:old_secret)
+
+      return @old_crypt ||= Utils::Crypt.new(@options.fetch(:old_secret))
     end
   end
 end
