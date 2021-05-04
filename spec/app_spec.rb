@@ -112,14 +112,40 @@ RSpec.describe(Tony::App, type: :rack_test) {
     }
   }
 
-  context('as middleware') {
-    before(:each) {
-      @app = Tony::App.new(->(_) { [418, {}, []] })
+  context('cookie management') {
+    it('sets cookies in response') {
+      @app = Tony::App.new(cookie_secret: 'fly_me_to_the_moon')
+      app.get('/', ->(_, resp) {
+        resp.set_cookie('tony', 'bennett')
+      })
+      get '/'
+      expect(get_cookie('tony')).to(eq('bennett'))
     }
 
-    it('continues to next app') {
+    it('gets cookies from request') {
+      @app = Tony::App.new(cookie_secret: 'fly_me_to_the_moon')
+      app.get('/', ->(req, resp) {
+        resp.write(req.get_cookie('tony'))
+      })
+      set_cookie('tony', 'bennett')
       get '/'
-      expect(last_response.status).to(eq(418))
+      expect(last_response.body).to(eq('bennett'))
+    }
+
+    it('raises error if you try set a cookie with no secret') {
+      @app = Tony::App.new
+      app.get('/', ->(_, resp) {
+        resp.set_cookie('tony', 'bennett')
+      })
+      expect { get('/') }.to(raise_error(ArgumentError))
+    }
+
+    it('raises error if you try to get a cookie with no secret') {
+      @app = Tony::App.new
+      app.get('/', ->(req, resp) {
+        resp.write(req.get_cookie('tony'))
+      })
+      expect { get('/') }.to(raise_error(ArgumentError))
     }
   }
 }

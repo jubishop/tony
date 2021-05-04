@@ -6,14 +6,14 @@ require_relative 'response'
 
 module Tony
   class App
-    def initialize(app = Rack::NotFound.new, **options)
-      @app, @options = app, options
+    def initialize(**options)
+      @options = options
       @routes = Hash.new { |hash, key| hash[key] = [] }
     end
 
     def call(env)
-      req = Request.new(env)
-      resp = Response.new
+      req = Request.new(env, **@options)
+      resp = Response.new(**@options)
 
       @routes[req.request_method].each { |route|
         next unless (match = route.match?(req.path))
@@ -33,13 +33,9 @@ module Tony
         return resp.finish
       }
 
-      if @not_found_block
-        resp.status = 404
-        @not_found_block.call(req, resp)
-        return resp.finish
-      end
-
-      return @app.call(env)
+      resp.status = 404
+      @not_found_block&.call(req, resp)
+      return resp.finish
     end
 
     def not_found(block)
