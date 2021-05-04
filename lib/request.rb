@@ -14,5 +14,11 @@ module Tony
     def get_cookie(key)
       return crypt.de(cookies[key])
     end
+
+    private
+
+    def secret
+      return @options.fetch(:secret)
+    end
   end
 end

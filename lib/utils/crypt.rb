@@ -6,6 +6,11 @@ module Tony
   module Utils
     class Crypt
       def initialize(secret)
+        secret = secret.to_s
+        unless secret.length >= 16
+          raise(ArgumentError, 'secret must have length >= 16')
+        end
+
         @encryption_key = hmac('Encryption', secret)
         @authentication_key = hmac('Authentication', secret)
       end

@@ -137,7 +137,7 @@ RSpec.describe(Tony::App, type: :rack_test) {
       app.get('/', ->(_, resp) {
         resp.set_cookie('tony', 'bennett')
       })
-      expect { get('/') }.to(raise_error(ArgumentError))
+      expect { get('/') }.to(raise_error(KeyError))
     }
 
     it('raises error if you try to get a cookie with no secret') {
@@ -145,7 +145,7 @@ RSpec.describe(Tony::App, type: :rack_test) {
       app.get('/', ->(req, resp) {
         resp.write(req.get_cookie('tony'))
       })
-      expect { get('/') }.to(raise_error(ArgumentError))
+      expect { get('/') }.to(raise_error(KeyError))
     }
   }
 }

@@ -24,5 +24,11 @@ module Tony
     def set_cookie(key, value)
       super(key, crypt.en(value))
     end
+
+    private
+
+    def secret
+      return @options.fetch(:secret)
+    end
   end
 end
