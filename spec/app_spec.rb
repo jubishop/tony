@@ -169,7 +169,7 @@ RSpec.describe(Tony::App, type: :rack_test) {
       app.get('/', ->(_, resp) {
         resp.set_cookie('tony', 'bennett')
       })
-      expect { get('/') }.to(raise_error(KeyError))
+      expect { get('/') }.to(raise_error(ArgumentError))
     }
 
     it('raises error if you try to get a cookie with no secret') {
@@ -177,7 +177,7 @@ RSpec.describe(Tony::App, type: :rack_test) {
       app.get('/', ->(req, resp) {
         resp.write(req.get_cookie('tony'))
       })
-      expect { get('/') }.to(raise_error(KeyError))
+      expect { get('/') }.to(raise_error(ArgumentError))
     }
 
     it('uses :old_secret when it exists') {
@@ -199,28 +199,6 @@ RSpec.describe(Tony::App, type: :rack_test) {
       set_cookie('tony', 'bennett')
       get '/'
       expect(last_response.body).to(eq(''))
-    }
-  }
-
-  context('slim rendering') {
-    it('renders basic page with no layout') {
-      @app = Tony::App.new(views: 'spec/assets/views')
-      app.get('/', ->(_, resp) {
-        resp.render(:basic)
-      })
-      get '/'
-      expect(last_response.body).to(have_content('Hello World'))
-    }
-
-    it('renders basic page with basic layout') {
-      @app = Tony::App.new(views: 'spec/assets/views/',
-                           layout: 'spec/assets/views/layouts/basic.slim')
-      app.get('/', ->(_, resp) {
-        resp.render(:basic)
-      })
-      get '/'
-      expect(last_response.body).to(include('<head>'))
-      expect(last_response.body).to(have_content('Hello World'))
     }
   }
 }

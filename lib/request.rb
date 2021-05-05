@@ -2,9 +2,10 @@ require 'rack'
 
 module Tony
   class Request < Rack::Request
-    def initialize(env, **options)
+    def initialize(env, secret: nil, old_secret: nil)
       super(env)
-      @options = options
+      @secret = secret
+      @old_secret = old_secret
     end
 
     def get_cookie(key)
@@ -14,13 +15,13 @@ module Tony
     private
 
     def crypt
-      return @crypt ||= Utils::Crypt.new(@options.fetch(:secret))
+      return @crypt ||= Utils::Crypt.new(@secret)
     end
 
     def old_crypt
-      return unless @options.key?(:old_secret)
+      return unless @old_secret
 
-      return @old_crypt ||= Utils::Crypt.new(@options.fetch(:old_secret))
+      return @old_crypt ||= Utils::Crypt.new(@old_secret)
     end
   end
 end
