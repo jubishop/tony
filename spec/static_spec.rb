@@ -1,5 +1,3 @@
-require_relative '../lib/static'
-
 RSpec.describe(Tony::Static, type: :rack_test) {
   context('file not found') {
     it('returns 404 if no more middleware left') {

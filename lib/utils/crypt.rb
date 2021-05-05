@@ -1,6 +1,5 @@
 require 'base64'
 require 'openssl'
-require 'rack'
 
 module Tony
   module Utils

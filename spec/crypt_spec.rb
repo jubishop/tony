@@ -1,5 +1,3 @@
-require_relative '../lib/utils/crypt'
-
 RSpec.describe(Tony::Utils::Crypt) {
   it('encrypts and decrypts to the same thing') {
     crypt = Tony::Utils::Crypt.new('fly_me_to_the_moon')

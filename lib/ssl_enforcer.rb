@@ -1,3 +1,5 @@
+require 'rack'
+
 module Tony
   class SSLEnforcer
     def initialize(app, **options)

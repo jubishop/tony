@@ -1,19 +1,8 @@
-require 'capybara/rspec'
-require 'rack'
-require 'rack/test'
 require 'tony/test'
 
-RSpec.shared_context(:rack_test) do
-  include Capybara::RSpecMatchers
-  include Rack::Test::Methods
-  include Tony::Test::Rack::Cookies
-
-  let(:cookie_secret) { 'fly_me_to_the_moon' }
-
-  after(:each) {
-    clear_cookies
-  }
-end
+RSpec.shared_context(:rack_test) {
+  include_context(:tony_rack_test)
+}
 
 RSpec.configure do |config|
   config.expect_with(:rspec) do |expectations|
