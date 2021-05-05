@@ -17,4 +17,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency('base64')
   spec.add_runtime_dependency('rack')
   spec.add_runtime_dependency('rack-contrib')
+  spec.add_runtime_dependency('slim')
 end

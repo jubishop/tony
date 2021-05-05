@@ -1,4 +1,7 @@
 require 'rack'
+require 'slim'
+
+require_relative 'asset_tag_helper'
 
 module Tony
   class Response < Rack::Response
@@ -6,8 +9,9 @@ module Tony
 
     attr_accessor :error
 
-    def initialize(**options)
+    def initialize(layout = nil, **options)
       super()
+      @layout = layout
       @options = options
     end
 
@@ -21,10 +25,37 @@ module Tony
       super(key, crypt.en(value))
     end
 
+    def render(file, **locals)
+      file = File.join(@options[:views], "#{file}.slim")
+      env = SlimEnv.new(**locals)
+
+      write(@layout.render(env) {
+        Slim::Template.new(file).render(env)
+      })
+    end
+
     private
 
     def crypt
       return @crypt ||= Utils::Crypt.new(@options.fetch(:secret))
+    end
+
+    class SlimEnv
+      include Tony::AssetTagHelper
+
+      def initialize(**locals)
+        @locals = locals
+      end
+
+      def method_missing(method, *args, &block)
+        return @locals.fetch(method) if @locals.key?(method)
+
+        return super
+      end
+
+      def respond_to_missing?(method, include_all)
+        return @locals.key?(method) || super
+      end
     end
   end
 end

@@ -1,5 +1,6 @@
 require 'core'
 require 'rack'
+require 'slim'
 
 require_relative 'request'
 require_relative 'response'
@@ -7,13 +8,19 @@ require_relative 'response'
 module Tony
   class App
     def initialize(**options)
-      @options = options
+      @options = { views: 'views', layout: 'views/layout.slim' }.merge!(options)
       @routes = Hash.new { |hash, key| hash[key] = {} }
+
+      begin
+        @layout = Slim::Template.new(@options[:layout])
+      rescue StandardError
+        @layout = nil
+      end
     end
 
     def call(env)
       req = Request.new(env, **@options)
-      resp = Response.new(**@options)
+      resp = Response.new(@template, **@options)
 
       @routes[req.request_method].each_value { |route|
         next unless (match = route.match?(req.path))

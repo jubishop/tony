@@ -4,6 +4,7 @@ source 'https://www.rubygems.org' do
   gem 'base64'
   gem 'rack'
   gem 'rack-contrib'
+  gem 'slim'
 end
 
 source 'https://www.jubigems.org' do
