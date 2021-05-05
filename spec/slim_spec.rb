@@ -1,4 +1,4 @@
-RSpec.describe(Tony::View) {
+RSpec.describe(Tony::Slim) {
   include Capybara::RSpecMatchers
 
   before(:each) {
@@ -7,7 +7,7 @@ RSpec.describe(Tony::View) {
 
   context('rendering slim views in basic layout') {
     before(:each) {
-      @slim = Tony::View.new(views: 'spec/assets/views',
+      @slim = Tony::Slim.new(views: 'spec/assets/views',
                              layout: 'spec/assets/views/layouts/basic.slim')
     }
 
@@ -27,7 +27,7 @@ RSpec.describe(Tony::View) {
 
   context('rendering basic views in layouts') {
     def renderer(layout)
-      return Tony::View.new(
+      return Tony::Slim.new(
           views: 'spec/assets/views',
           layout: File.join('spec/assets/views/layouts', layout))
     end
@@ -47,7 +47,7 @@ RSpec.describe(Tony::View) {
 
   context('rendering views alone') {
     it('renders basic view with no layout') {
-      slim = Tony::View.new(views: 'spec/assets/views')
+      slim = Tony::Slim.new(views: 'spec/assets/views')
       expect(slim.render(:basic)).to(have_selector('p', text: 'Hello World'))
     }
   }

@@ -1,22 +1,20 @@
 require 'slim'
 
-require_relative 'asset_tag_helper'
-
 module Tony
-  class View
+  class Slim
     def initialize(views:, layout: nil)
       @views = views
       @layout = if layout
-                  Slim::Template.new(layout)
+                  ::Slim::Template.new(layout)
                 else
-                  Slim::Template.new { '==yield' }
+                  ::Slim::Template.new { '==yield' }
                 end
     end
 
     def render(file, **locals)
       file = File.join(@views, "#{file}.slim")
       env = Env.new(**locals)
-      return @layout.render(env) { Slim::Template.new(file).render(env) }
+      return @layout.render(env) { ::Slim::Template.new(file).render(env) }
     end
 
     class Env

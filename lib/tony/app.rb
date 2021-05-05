@@ -1,9 +1,6 @@
 require 'core'
 require 'rack'
 
-require_relative 'request'
-require_relative 'response'
-
 module Tony
   class App
     def initialize(secret: nil, old_secret: nil)
