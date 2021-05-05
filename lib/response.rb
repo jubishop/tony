@@ -28,10 +28,7 @@ module Tony
     def render(file, **locals)
       file = File.join(@options[:views], "#{file}.slim")
       env = SlimEnv.new(**locals)
-
-      write(@layout.render(env) {
-        Slim::Template.new(file).render(env)
-      })
+      write(@layout.render(env) { Slim::Template.new(file).render(env) })
     end
 
     private
@@ -48,9 +45,7 @@ module Tony
       end
 
       def method_missing(method, *args, &block)
-        return @locals.fetch(method) if @locals.key?(method)
-
-        return super
+        return @locals.key?(method) ? @locals.fetch(method) : super
       end
 
       def respond_to_missing?(method, include_all)
