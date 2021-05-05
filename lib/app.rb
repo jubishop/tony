@@ -14,13 +14,13 @@ module Tony
       begin
         @layout = Slim::Template.new(@options[:layout])
       rescue StandardError
-        @layout = nil
+        @layout = Slim::Template.new { '==yield' }
       end
     end
 
     def call(env)
       req = Request.new(env, **@options)
-      resp = Response.new(@template, **@options)
+      resp = Response.new(@layout, **@options)
 
       @routes[req.request_method].each_value { |route|
         next unless (match = route.match?(req.path))
