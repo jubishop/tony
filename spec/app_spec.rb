@@ -145,17 +145,27 @@ RSpec.describe(Tony::App, type: :rack_test) {
   }
 
   context('cookie management') {
-    it('sets cookies in response') {
+    it('sets cookies in response in https') {
+      @app = Tony::App.new(secret: 'fly_me_to_the_moon')
+      app.get('/', ->(_, resp) {
+        resp.set_cookie('tony', 'bennett')
+      })
+      # rubocop:disable Style/StringHashKeys
+      get '/', {}, { 'HTTPS' => 'on' }
+      # rubocop:enable Style/StringHashKeys
+      expect(get_cookie('tony')).to(eq('bennett'))
+      cookie = rack_mock_session.cookie_jar.get_cookie('tony')
+      expect(cookie.path).to(eq('/'))
+      expect(cookie.expires).to(eq(Time.at(2**31 - 1)))
+    }
+
+    it('gives no cookie over http') {
       @app = Tony::App.new(secret: 'fly_me_to_the_moon')
       app.get('/', ->(_, resp) {
         resp.set_cookie('tony', 'bennett')
       })
       get '/'
-      expect(get_cookie('tony')).to(eq('bennett'))
-
-      cookie = rack_mock_session.cookie_jar.get_cookie('tony')
-      expect(cookie.path).to(eq('/'))
-      expect(cookie.expires).to(eq(Time.at(2**31 - 1)))
+      expect(get_cookie('tony')).to(eq(''))
     }
 
     it('gets cookies from request') {

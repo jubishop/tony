@@ -28,6 +28,8 @@ module Tony
         return unless tag && ciphertext && verify_message(tag, ciphertext)
 
         return decrypt_ciphertext(ciphertext)
+      rescue StandardError
+        return ''
       end
 
       private
