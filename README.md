@@ -52,6 +52,39 @@ app.get('/', ->(_, resp) {
 run app
 ```
 
+## Routing
+
+`Tony` routes paths to lambdas and passes them two parameters: a `Tony::Request` and a `Tony::Response`.  These classes extend `Rack::Request` and `Rack::Response` respectively.  A simple route can be created for exact matches with a `String`, but you can also pass a `Regexp` and any `named_captures` are appended to the `.params` `Hash` inside the `Tony::Response`:
+
+```ruby
+require 'tony'
+
+app = Tony.new
+app.get(%r{^/(?<artist>.+?)/(?<album>.+)$}, ->(req, resp) {
+  resp.write("Artist/Album: #{req.params[:artist]}/#{req.params[:album]}")
+})
+
+app.post('/save', ->(req, resp) {
+  # Save something here, using values in the `req.params` Hash.
+  resp.status = 201
+  resp.write('Saved successful')
+}
+
+run app
+```
+
+## Not Found
+
+```ruby
+app.not_found(->(req, resp) {
+  resp.write("Sorry, #{req.url} is not a valid url")
+})
+```
+
+## Production Examples
+
+- [JubiVote](https://github.com/jubishop/jubivote)
+
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
