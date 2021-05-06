@@ -29,7 +29,7 @@ module Tony
     module ContentFor
       def content_for(key)
         content_blocks[key.to_sym].push(yield)
-        return ''
+        return
       end
 
       def yield_content(key)
