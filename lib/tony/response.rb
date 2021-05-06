@@ -18,11 +18,11 @@ module Tony
     end
 
     def set_cookie(key, value)
-      super(key, value: crypt.en(value),
-                 path: '/',
-                 expires: Time.at(2**31 - 1),
-                 secure: true,
-                 httponly: true)
+      super(key.to_s, value: crypt.en(value),
+                      path: '/',
+                      expires: Time.at(2**31 - 1),
+                      secure: true,
+                      httponly: true)
     end
 
     private
