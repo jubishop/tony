@@ -2,6 +2,8 @@ require 'tony/test'
 
 RSpec.shared_context(:rack_test) {
   include_context(:tony_rack_test)
+
+  let(:cookie_secret) { 'fly_me_to_the_moon' }
 }
 
 RSpec.configure do |config|
