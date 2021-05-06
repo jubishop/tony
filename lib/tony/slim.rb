@@ -5,20 +5,47 @@ module Tony
     def initialize(views:, layout: nil)
       @views = views
       @layout = if layout
-                  ::Slim::Template.new(layout)
+                  ::Slim::Template.new(append_slim(layout))
                 else
                   ::Slim::Template.new { '==yield' }
                 end
     end
 
     def render(file, **locals)
-      file = File.join(@views, "#{file}.slim")
+      file = File.join(@views, append_slim(file))
       env = Env.new(**locals)
-      return @layout.render(env) { ::Slim::Template.new(file).render(env) }
+      view = ::Slim::Template.new(file).render(env)
+      return @layout.render(env) { view }
+    end
+
+    private
+
+    def append_slim(file)
+      file = file.to_s
+      file += '.slim' if File.extname(file).empty?
+      return file
+    end
+
+    module ContentFor
+      def content_for(key)
+        content_blocks[key.to_sym].push(yield)
+        return ''
+      end
+
+      def yield_content(key)
+        content_blocks[key.to_sym].join
+      end
+
+      private
+
+      def content_blocks
+        @content_blocks ||= Hash.new { |hash, key| hash[key] = [] }
+      end
     end
 
     class Env
       include Tony::AssetTagHelper
+      include ContentFor
 
       def initialize(**locals)
         @locals = locals

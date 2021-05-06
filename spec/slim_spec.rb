@@ -33,13 +33,13 @@ RSpec.describe(Tony::Slim) {
     end
 
     it('renders asset tag helpers') {
-      slim = renderer('tag_helpers.slim')
+      slim = renderer('tag_helpers')
       expect(slim.render(:basic)).to(
           have_selector('link[href="/layout.css?v=99"]'))
     }
 
     it('renders local variables') {
-      slim = renderer('locals.slim')
+      slim = renderer('locals')
       expect(slim.render(:basic, name: 'Bennett')).to(
           have_content('Mr Bennett'))
     }
@@ -49,6 +49,17 @@ RSpec.describe(Tony::Slim) {
     it('renders basic view with no layout') {
       slim = Tony::Slim.new(views: 'spec/assets/views')
       expect(slim.render(:basic)).to(have_selector('p', text: 'Hello World'))
+    }
+  }
+
+  context('rendering content_for') {
+    it('renders content_for correctly') {
+      slim = Tony::Slim.new(
+          views: 'spec/assets/views',
+          layout: 'spec/assets/views/layouts/yield_content.slim')
+      expect(slim.render(:content_for)).to(have_content('Fly Me To The Moon'))
+      expect(slim.render(:content_for)).to(have_content('You Look Tonight'))
+      expect(slim.render(:content_for)).to_not(have_content('Once In My Life'))
     }
   }
 }
