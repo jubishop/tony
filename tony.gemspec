@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = 'tony'
-  spec.version       = '0.25'
+  spec.version       = '0.26'
   spec.summary       = %q(Tony Bennett is way better than Sinatra.)
   spec.authors       = ['Justin Bishop']
   spec.email         = ['jubishop@gmail.com']
