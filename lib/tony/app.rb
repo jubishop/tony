@@ -47,6 +47,10 @@ module Tony
     def get(path, block)
       @routes['GET'][path] = Route.new(path, block)
     end
+
+    def post(path, block)
+      @routes['POST'][path] = Route.new(path, block)
+    end
   end
 
   Route = Struct.new(:path, :block) {

@@ -12,6 +12,12 @@ RSpec.describe(Tony::App, type: :rack_test) {
       expect(last_response.status).to(be(200))
     }
 
+    it('returns default 200 status on post') {
+      app.post('/', ->(_, resp) {})
+      post '/'
+      expect(last_response.status).to(be(200))
+    }
+
     it('deals with returning from a block') {
       app.get('/', ->(_, resp) {
         resp.write('Heyo')
