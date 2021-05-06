@@ -9,6 +9,7 @@ module Tony
     end
 
     def get_cookie(key)
+      key = key.to_s
       return crypt.de(cookies[key]) || old_crypt&.de(cookies[key])
     end
 

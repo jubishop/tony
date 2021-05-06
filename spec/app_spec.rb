@@ -162,7 +162,7 @@ RSpec.describe(Tony::App, type: :rack_test) {
     it('gives no cookie over http') {
       @app = Tony::App.new(secret: 'fly_me_to_the_moon')
       app.get('/', ->(_, resp) {
-        resp.set_cookie('tony', 'bennett')
+        resp.set_cookie(:tony, 'bennett')
       })
       get '/'
       expect(get_cookie('tony')).to(eq(''))
@@ -171,7 +171,7 @@ RSpec.describe(Tony::App, type: :rack_test) {
     it('gets cookies from request') {
       @app = Tony::App.new(secret: 'fly_me_to_the_moon')
       app.get('/', ->(req, resp) {
-        resp.write(req.get_cookie('tony'))
+        resp.write(req.get_cookie(:tony))
       })
       set_cookie('tony', 'bennett')
       get '/'
@@ -181,7 +181,7 @@ RSpec.describe(Tony::App, type: :rack_test) {
     it('raises error if you try set a cookie with no secret') {
       @app = Tony::App.new
       app.get('/', ->(_, resp) {
-        resp.set_cookie('tony', 'bennett')
+        resp.set_cookie(:tony, 'bennett')
       })
       expect { get('/') }.to(raise_error(ArgumentError))
     }
@@ -189,7 +189,7 @@ RSpec.describe(Tony::App, type: :rack_test) {
     it('raises error if you try to get a cookie with no secret') {
       @app = Tony::App.new
       app.get('/', ->(req, resp) {
-        resp.write(req.get_cookie('tony'))
+        resp.write(req.get_cookie(:tony))
       })
       expect { get('/') }.to(raise_error(ArgumentError))
     }
@@ -198,7 +198,7 @@ RSpec.describe(Tony::App, type: :rack_test) {
       @app = Tony::App.new(secret: 'for_once_in_my_life',
                            old_secret: 'fly_me_to_the_moon')
       app.get('/', ->(req, resp) {
-        resp.write(req.get_cookie('tony'))
+        resp.write(req.get_cookie(:tony))
       })
       set_cookie('tony', 'bennett')
       get '/'
@@ -208,7 +208,7 @@ RSpec.describe(Tony::App, type: :rack_test) {
     it('returns empty string if your secret is wrong') {
       @app = Tony::App.new(secret: 'for_once_in_my_life')
       app.get('/', ->(req, resp) {
-        resp.write(req.get_cookie('tony'))
+        resp.write(req.get_cookie(:tony))
       })
       set_cookie('tony', 'bennett')
       get '/'
