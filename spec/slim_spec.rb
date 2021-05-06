@@ -8,7 +8,7 @@ RSpec.describe(Tony::Slim) {
   context('rendering slim views in basic layout') {
     before(:each) {
       @slim = Tony::Slim.new(views: 'spec/assets/views',
-                             layout: 'spec/assets/views/layouts/basic.slim')
+                             layout: 'spec/assets/views/layouts/basic')
     }
 
     it('renders a basic view') {
@@ -56,7 +56,7 @@ RSpec.describe(Tony::Slim) {
     it('renders content_for correctly') {
       slim = Tony::Slim.new(
           views: 'spec/assets/views',
-          layout: 'spec/assets/views/layouts/yield_content.slim')
+          layout: 'spec/assets/views/layouts/yield_content')
       expect(slim.render(:content_for)).to(have_content('Fly Me To The Moon'))
       expect(slim.render(:content_for)).to(have_content('You Look Tonight'))
       expect(slim.render(:content_for)).to_not(have_content('Once In My Life'))

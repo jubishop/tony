@@ -5,25 +5,17 @@ module Tony
     def initialize(views:, layout: nil)
       @views = views
       @layout = if layout
-                  ::Slim::Template.new(append_slim_ext(layout))
+                  ::Slim::Template.new("#{layout}.slim")
                 else
                   ::Slim::Template.new { '==yield' }
                 end
     end
 
     def render(file, **locals)
-      file = File.join(@views, append_slim_ext(file))
+      file = File.join(@views, "#{file}.slim")
       env = Env.new(**locals)
       view = ::Slim::Template.new(file).render(env)
       return @layout.render(env) { view }
-    end
-
-    private
-
-    def append_slim_ext(file)
-      file = file.to_s
-      file += '.slim' if File.extname(file).empty?
-      return file
     end
 
     module ContentFor
