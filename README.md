@@ -77,6 +77,7 @@ run app
 
 ```ruby
 app.not_found(->(req, resp) {
+  # Status will default to 404 unless you set it yourself.
   resp.write("Sorry, #{req.url} is not a valid url")
 })
 ```
