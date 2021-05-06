@@ -48,6 +48,8 @@ app = Tony.new
 app.get('/', ->(_, resp) {
   resp.write('Hello World')
 })
+
+run app
 ```
 
 ## License
