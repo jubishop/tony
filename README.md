@@ -87,7 +87,7 @@ app.not_found(->(req, resp) {
 
 ### Catching Errors
 
-If any call raises an Error, `Tony` catches it and will calls any block passed to `error()` if one exists, adding the caught error message as `.error` to the [`Tony::Response`](https://github.com/jubishop/tony/blob/master/lib/tony/response.rb) instance.  You might want to choose to display a friendly error message in production but raise the stack trace in development.  You could do something like:
+If any call raises an Error, `Tony` catches it and calls any block passed to `error()` if one exists, adding the caught error message as `.error` to the [`Tony::Response`](https://github.com/jubishop/tony/blob/master/lib/tony/response.rb) instance.  You might want to choose to display a friendly error message in production but raise the stack trace in development.  You could do something like:
 
 ```ruby
 app.error(->(_, resp) {
