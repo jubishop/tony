@@ -177,7 +177,7 @@ use Tony::Static, public_folder: `my_public_folder`
 
 ### AssetTagHelper
 
-Next, use the methods provided in [`AssetTagHelper`](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) to create your asset tags for `CSS`, `Javascript` etc.  These will be covered in greater detail in the [`Rendering (Slim)`](https://github.com/jubishop/tony#rendering-slim) ['AssetTagHelper'](https://github.com/jubishop/tony#assettaghelper) section below.
+Next, use the methods provided in [`AssetTagHelper`](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) to create your asset tags for `CSS`, `Javascript` etc.  These will be covered in greater detail in the [`Rendering (Slim)`](https://github.com/jubishop/tony#rendering-slim) ['AssetTagHelper'](https://github.com/jubishop/tony#tonyassettaghelper) section below.
 
 ## Rendering (Slim)
 
