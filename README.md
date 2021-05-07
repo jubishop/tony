@@ -155,10 +155,12 @@ app = Tony.new(secret: 'FLY_ME_TO_THE_MOON', old_secret: 'FOR_ONCE_IN_MY_LIFE')
 
 `Tony` provides a static file server and an intelligent strategy for ensuring clients always cache files that haven't changed, but also always fetch them again once they have.
 
-- It passes `'public, max-age=31536000, immutable'` for the `Cache-Control` header to tell a client to always cache what its fetched.
-- It checks the `mtime` for each file (just once at launch, then it keeps the value in memory) and it appends that `mtime` to each asset url as part of a `?v=` parameter.
+- [`Tony::Static`](https://github.com/jubishop/tony/blob/master/lib/tony/static.rb) passes `'public, max-age=31536000, immutable'` for the `Cache-Control` header to tell a client to always cache what its fetched.
+- [`Tony::AssetTagHelper`](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) checks the `mtime` for each file (just once at launch, then it keeps the value in memory) and it appends that `mtime` to each asset url as part of a `?v=` parameter.
 
 As soon as a file has been modified, the `mtime` will change and clients will fetch the new version.  But as long as it hasn't changed, clients will use the cached version for a year (31536000 seconds).
+
+When `env['APP_ENV']` is anything other than `production`, [Tony::AssetTagHelper](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) will instead simply append the current unix timestamp to aid in development, so you always get the latest version on refresh.
 
 ### Tony::Static
 
@@ -173,7 +175,7 @@ use Tony::Static, public_folder: `my_public_folder`
 # Now you'd create your `Tony::App` instance and `run` as in other examples.
 ```
 
-### Asset Tag Helpers
+### AssetTagHelper
 
 Next, use the methods provided in [`AssetTagHelper`](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) to create your asset tags for `CSS`, `Javascript` etc.  These will be covered in greater detail in the [`Rendering (Slim)`](https://github.com/jubishop/tony#rendering-slim) ['AssetTagHelper'](https://github.com/jubishop/tony#assettaghelper) section below.
 
@@ -200,9 +202,9 @@ app.get('/', ->(_, resp) {
 })
 ```
 
-### [AssetTagHelper](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb)
+### [Tony::AssetTagHelper](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb)
 
-Inside your slim template files, these methods will be provided for you, loosely modeled off those provided by [`ActionView::Helpers::AssetTagHelper`](https://api.rubyonrails.org/classes/ActionView/Helpers/AssetTagHelper.html) in Rails.  [`AssetTagHelper`](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) will automatically append the proper file extension for you.
+Inside your slim template files, these methods will be provided for you, loosely modeled off those provided by [`ActionView::Helpers::AssetTagHelper`](https://api.rubyonrails.org/classes/ActionView/Helpers/AssetTagHelper.html) in Rails.  [`Tony::AssetTagHelper`](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) will automatically append the proper file extension for you.
 
 - favicon_link_tag(source = :favicon, rel: :icon)
 - preconnect_link_tag(source)
@@ -226,7 +228,7 @@ In slim you use `==` to call these tags and output their contents directly witho
 
 ### ContentFor
 
-[AssetTagHelper](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) provides its own implementation of `yield_content` and `content_for`, which is most commonly used to allow internal views to inject asset tags into the `<head>` of the layout file.  For example:
+[`Tony::AssetTagHelper`](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) provides its own implementation of `yield_content` and `content_for`, which is most commonly used to allow internal views to inject asset tags into the `<head>` of the layout file.  For example:
 
 ```slim
 / In layout.slim
@@ -245,6 +247,20 @@ html lang="en"
 
 / This yields into the body
 p Hello World
+```
+
+## Enforcing HTTPS
+
+`Tony` provides it's own middleware for enforcing immediate redirects to `https`.  You may ask, why not just use [`rack-ssl-enforcer`](https://github.com/tobmatth/rack-ssl-enforcer)?  Unfortunately, it is [not thread safe](https://github.com/tobmatth/rack-ssl-enforcer/pull/105) and seems to be dead.  So `Tony` provides a modern, thread-safe, alternative.
+
+Simply add [`Tony::SSLEnforcer`](https://github.com/jubishop/tony/blob/master/lib/tony/ssl_enforcer.rb) to your Rack middlewares.  You probably want it at the very top, and you may want to only apply it when in production:
+
+```ruby
+# In config.ru
+require 'tony'
+
+use Tony::SSLEnforcer if ENV.fetch('RACK_ENV') == 'production'
+# Now add `use Tony::Static` and `run Tony::App`
 ```
 
 ## Production Examples
