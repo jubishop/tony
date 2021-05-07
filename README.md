@@ -27,7 +27,7 @@ end
 
 ### Fast and inherently thread safe
 
-`Tony` follows the elegant design principles of Rack.  A `Tony` app is one instance that is frozen after initialization.  Everything regarding a single request happens inside the `call()` method.  This makes `Tony` inherently fast and thread safe.
+`Tony` follows the elegant design principles of Rack.  A [`Tony`](https://github.com/jubishop/tony/blob/master/lib/tony/app.rb) app is one instance that is frozen after initialization.  Everything regarding a single request happens inside the `call()` method.  This makes `Tony` inherently fast and thread safe.
 
 ### One way to do things
 
@@ -123,6 +123,32 @@ app.get('/deep_stack', ->(_, resp) {
   resp.404 # this won't get called because of the throw(:response).
   resp.write('No response was found I guess')
 })
+```
+
+## Encrypted Cookies
+
+`Tony` provides strong `aes-256-cbc` encryption, you can see exactly how it works in [`crypt.rb`](https://github.com/jubishop/tony/blob/master/lib/tony/utils/crypt.rb).  Once you've passed a `:secret` param to your [`Tony`](https://github.com/jubishop/tony/blob/master/lib/tony/app.rb) instance, it will provide methods in the `Tony::Response` to set and encrypt cookies, and in `Tony::Request` to get and decrypt them.  If you don't pass a `:secret`, `Tony` will refuse to read or write cookies for you.  (Pro-tip:  Use [`SecureRandom`](https://ruby-doc.org/stdlib/libdoc/securerandom/rdoc/SecureRandom.html) to easily make yourself a strong secret.)
+
+```ruby
+app = Tony.new(secret: 'PLEASE_REPLACE_THIS')
+app.post('/set_cookie', ->(_, resp) {
+  resp.set_cookie('tony', 'bennett')
+  resp.write('Ok I set a cookie for key: tony')
+})
+
+app.post('/get_cookie', ->(req, resp) {
+  value = req.get_cookie('tony')
+  resp.write("Ok the cookie value for tony is: #{value}") # bennett
+})
+```
+
+### Secret rotation
+
+`Tony` provides an easy way to rotate new secrets.  Simply pass `:old_secret` to your `Tony` instance for what you've been using, and `:secret` for what you want to rotate into.
+
+```ruby
+app = Tony.new(secret: 'THAT_NEW_NEW', old_secret: 'THE_OLD_OLD')
+# Everything else works the same.
 ```
 
 ## Production Examples
