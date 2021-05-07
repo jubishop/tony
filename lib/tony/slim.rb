@@ -20,12 +20,12 @@ module Tony
 
     module ContentFor
       def content_for(key)
-        content_blocks[key.to_sym].push(yield)
+        content_blocks[key].push(yield)
         return
       end
 
       def yield_content(key)
-        content_blocks[key.to_sym].join
+        content_blocks[key].join
       end
 
       private

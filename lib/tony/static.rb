@@ -3,15 +3,9 @@ require 'rack/contrib'
 
 module Tony
   class Static
-    def initialize(app = Rack::NotFound.new, **options)
+    def initialize(app = Rack::NotFound.new, public_folder: 'public')
       @app = app
-      @options = {
-        public_folder: 'public',
-        headers: {
-          'Cache-Control': 'public, max-age=31536000, immutable'
-        }
-      }.merge(options)
-      @file_server = Rack::File.new(@options[:public_folder])
+      @file_server = Rack::File.new(public_folder)
     end
 
     def call(env)
@@ -21,9 +15,7 @@ module Tony
       status, headers, body = @file_server.call(env)
       return @app.call(env) if status == 404
 
-      @options[:headers].each { |name, value|
-        headers[name.to_s] = value.to_s
-      }
+      headers['Cache-Control'] = 'public, max-age=31536000, immutable'
       return [status, headers, body]
     end
   end

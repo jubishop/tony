@@ -62,12 +62,10 @@ module Tony
         end
       end
 
-      def self.static_url(app, source, ext = nil)
-        source = source.to_s
+      def self.static_url(app, source, ext)
         return source if source.start_with?('http')
 
-        source.prepend('/') unless source.start_with?('/')
-        source += ".#{ext}" if ext && File.extname(source).empty?
+        source = "/#{source}.#{ext}"
         return "#{source}?v=#{time(app, source)}"
       end
     end
