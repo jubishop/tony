@@ -54,12 +54,13 @@ run app
 
 ## Routing
 
-`Tony` routes paths to lambdas and passes them two parameters: a [`Tony::Request`](https://github.com/jubishop/tony/blob/master/lib/tony/request.rb) and a [`Tony::Response`](https://github.com/jubishop/tony/blob/master/lib/tony/response.rb).  These classes extend [`Rack::Request`](https://github.com/rack/rack/blob/master/lib/rack/request.rb) and [`Rack::Response`](https://github.com/rack/rack/blob/master/lib/rack/response.rb) respectively.  A simple route can be created for exact matches with a `String`, but you can also pass a `Regexp` and any [`named_captures`](https://ruby-doc.org/core/Regexp.html#method-i-named_captures) are appended to the `.params` `Hash` inside the [`Tony::Response`](https://github.com/jubishop/tony/blob/master/lib/tony/response.rb):
+`Tony` routes paths to lambdas and passes them two parameters: a [`Tony::Request`](https://github.com/jubishop/tony/blob/master/lib/tony/request.rb) and a [`Tony::Response`](https://github.com/jubishop/tony/blob/master/lib/tony/response.rb).  These classes extend [`Rack::Request`](https://github.com/rack/rack/blob/master/lib/rack/request.rb) and [`Rack::Response`](https://github.com/rack/rack/blob/master/lib/rack/response.rb) respectively.  A simple route can be created for exact matches with a `String`, but you can also pass a [`Regexp`](https://ruby-doc.org/core/Regexp.html) and any [`named_captures`](https://ruby-doc.org/core/Regexp.html#method-i-named_captures) are appended to the `.params` `Hash` inside the [`Tony::Response`](https://github.com/jubishop/tony/blob/master/lib/tony/response.rb):
 
 ```ruby
 require 'tony'
 
 app = Tony.new
+# This would capture, say: /Tony_Bennett/Life_Is_Beautiful
 app.get(%r{^/(?<artist>.+?)/(?<album>.+)$}, ->(req, resp) {
   resp.write("Artist/Album: #{req.params[:artist]}/#{req.params[:album]}")
 })
@@ -67,13 +68,15 @@ app.get(%r{^/(?<artist>.+?)/(?<album>.+)$}, ->(req, resp) {
 app.post('/save', ->(req, resp) {
   # Save something here, using values in the `req.params` Hash.
   resp.status = 201
-  resp.write('Saved successful')
+  resp.write('Save successful')
 }
 
 run app
 ```
 
 ### Not Found
+
+If no path matches, `Tony` will call the `not_found` block if it exists.
 
 ```ruby
 app.not_found(->(req, resp) {
@@ -99,7 +102,7 @@ app.error(->(_, resp) {
 
 ### throw(:response)
 
-Every call is wrapped in a `catch(:response)`, which means wherever you are in the stack if you filled in your [`Tony::Response`](https://github.com/jubishop/tony/blob/master/lib/tony/response.rb), you can call `throw(:response)` to immediately unwind the stack and end execution (in Sinatra this is equivalent to the `halt()` method):
+Every call is wrapped in a `catch(:response)`, which means wherever you are in the stack, once you've filled in your [`Tony::Response`](https://github.com/jubishop/tony/blob/master/lib/tony/response.rb), you can call `throw(:response)` to immediately unwind the stack and respond:
 
 ```ruby
 def level_three(resp)
