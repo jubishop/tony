@@ -69,7 +69,7 @@ app.post('/save', ->(req, resp) {
   # Save something here, using values in the `req.params` Hash.
   resp.status = 201
   resp.write('Save successful')
-}
+})
 
 run app
 ```
