@@ -251,7 +251,7 @@ p Hello World
 
 ## Enforcing HTTPS
 
-`Tony` provides it's own middleware for enforcing immediate redirects to `https`.  You may ask, why not just use [`rack-ssl-enforcer`](https://github.com/tobmatth/rack-ssl-enforcer)?  Unfortunately, it is [not thread safe](https://github.com/tobmatth/rack-ssl-enforcer/pull/105) and seems to be dead.  So `Tony` provides a modern, thread-safe, alternative.
+`Tony` provides it's own middleware for enforcing immediate redirects to `https`.  You may ask, why not just use [`rack-ssl-enforcer`](https://github.com/tobmatth/rack-ssl-enforcer)?  Unfortunately, it is [not thread safe](https://github.com/tobmatth/rack-ssl-enforcer/pull/105) and seems to be dead.  So `Tony` provides a modern, thread-safe alternative.
 
 Simply add [`Tony::SSLEnforcer`](https://github.com/jubishop/tony/blob/master/lib/tony/ssl_enforcer.rb) to your Rack middlewares.  You probably want it at the very top, and you may want to only apply it when in production:
 
