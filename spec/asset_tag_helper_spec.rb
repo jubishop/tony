@@ -19,24 +19,20 @@ RSpec.describe(Tony::AssetTagHelper) {
     }
 
     it('creates a stylesheet link tag') {
-      [:test, 'test', '/test', 'test.css', '/test.css'].each { |source|
-        tag = stylesheet_link_tag(source)
-        expect(tight(tag)).to(eq(tight(<<~HTML)))
-          <link rel="stylesheet"
-                href="/test.css?v=99"
-                media="screen" />
-        HTML
-      }
+      tag = stylesheet_link_tag(:test)
+      expect(tight(tag)).to(eq(tight(<<~HTML)))
+        <link rel="stylesheet"
+              href="/test.css?v=99"
+              media="screen" />
+      HTML
     }
 
     it('creates a javascript include tag') {
-      [:test, 'test', '/test', 'test.js', '/test.js'].each { |source|
-        tag = javascript_include_tag(source)
-        expect(tight(tag)).to(eq(tight(<<~HTML)))
-          <script src="/test.js?v=99"
-                  crossorigin="anonymous"></script>
-        HTML
-      }
+      tag = javascript_include_tag(:test)
+      expect(tight(tag)).to(eq(tight(<<~HTML)))
+        <script src="/test.js?v=99"
+                crossorigin="anonymous"></script>
+      HTML
     }
   }
 
@@ -85,25 +81,21 @@ RSpec.describe(Tony::AssetTagHelper) {
 
     it('creates a stylesheet link tag') {
       mtime = File.mtime('spec/assets/test.css').to_i
-      [:test, 'test', '/test', 'test.css', '/test.css'].each { |source|
-        tag = stylesheet_link_tag(source)
-        expect(tight(tag)).to(eq(tight(<<~HTML)))
-          <link rel="stylesheet"
-                href="/test.css?v=#{mtime}"
-                media="screen" />
-        HTML
-      }
+      tag = stylesheet_link_tag(:test)
+      expect(tight(tag)).to(eq(tight(<<~HTML)))
+        <link rel="stylesheet"
+              href="/test.css?v=#{mtime}"
+              media="screen" />
+      HTML
     }
 
     it('creates a javascript include tag') {
       mtime = File.mtime('spec/assets/test.js').to_i
-      [:test, 'test', '/test', 'test.js', '/test.js'].each { |source|
-        tag = javascript_include_tag(source)
-        expect(tight(tag)).to(eq(tight(<<~HTML)))
-          <script src="/test.js?v=#{mtime}"
-                  crossorigin="anonymous"></script>
-        HTML
-      }
+      tag = javascript_include_tag(:test)
+      expect(tight(tag)).to(eq(tight(<<~HTML)))
+        <script src="/test.js?v=#{mtime}"
+                crossorigin="anonymous"></script>
+      HTML
     }
   }
 }

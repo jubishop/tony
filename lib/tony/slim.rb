@@ -2,7 +2,7 @@ require 'slim'
 
 module Tony
   class Slim
-    def initialize(views:, layout: nil)
+    def initialize(views: 'views', layout: nil)
       @views = views
       @layout = if layout
                   ::Slim::Template.new("#{layout}.slim")
@@ -18,26 +18,9 @@ module Tony
       return @layout.render(env) { view }
     end
 
-    module ContentFor
-      def content_for(key)
-        content_blocks[key.to_sym].push(yield)
-        return
-      end
-
-      def yield_content(key)
-        content_blocks[key.to_sym].join
-      end
-
-      private
-
-      def content_blocks
-        @content_blocks ||= Hash.new { |hash, key| hash[key] = [] }
-      end
-    end
-
     class Env
       include Tony::AssetTagHelper
-      include ContentFor
+      include Tony::ContentFor
 
       def initialize(**locals)
         @locals = locals
