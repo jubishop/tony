@@ -206,15 +206,15 @@ app.get('/', ->(_, resp) {
 
 Inside your slim template files, these methods will be provided for you, loosely modeled off those provided by [`ActionView::Helpers::AssetTagHelper`](https://api.rubyonrails.org/classes/ActionView/Helpers/AssetTagHelper.html) in Rails.  [`Tony::AssetTagHelper`](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) will automatically append the proper file extension for you.
 
-- favicon_link_tag(source = :favicon, rel: :icon)
-- preconnect_link_tag(source)
-- stylesheet_link_tag(source, media: :screen)
-- javascript_include_tag(source, crossorigin: :anonymous)
+- `favicon_link_tag(source = :favicon, rel: :icon)`
+- `preconnect_link_tag(source)`
+- `stylesheet_link_tag(source, media: :screen)`
+- `javascript_include_tag(source, crossorigin: :anonymous)`
 
 There are also a few extras that have no parallel in Rails:
 
-- google_fonts(*fonts)
-- font_awesome(kit_id)
+- `google_fonts(*fonts)`
+- `font_awesome(kit_id)`
 
 In slim you use `==` to call these tags and output their contents directly without any HTML escaping:
 
