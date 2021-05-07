@@ -260,7 +260,7 @@ Simply add [`Tony::SSLEnforcer`](https://github.com/jubishop/tony/blob/master/li
 require 'tony'
 
 use Tony::SSLEnforcer if ENV.fetch('RACK_ENV') == 'production'
-# Now add `use Tony::Static` and `run Tony::App`
+# Now add `use Tony::Static` and `run Tony::App as in other examples.`
 ```
 
 ## Production Examples
