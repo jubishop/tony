@@ -175,7 +175,7 @@ use Tony::Static, public_folder: `my_public_folder`
 
 ### Asset Tag Helpers
 
-Next, use the methods provided in [`AssetTagHelper`](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) to create your asset tags for `CSS`, `Javascript` etc.  These will be covered in greater detail in the [`Rendering (Slim)`](https://github.com/jubishop/tony#rendering-slim) rendering section below
+Next, use the methods provided in [`AssetTagHelper`](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) to create your asset tags for `CSS`, `Javascript` etc.  These will be covered in greater detail in the [`Rendering (Slim)`](https://github.com/jubishop/tony#rendering-slim) ['AssetTagHelper'](https://github.com/jubishop/tony#assettaghelper) section below.
 
 ## Rendering (Slim)
 
@@ -200,7 +200,52 @@ app.get('/', ->(_, resp) {
 })
 ```
 
-### AssetTagHelper
+### [AssetTagHelper](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb)
+
+Inside your slim template files, these methods will be provided for you, loosely modeled off those provided by [`ActionView::Helpers::AssetTagHelper`](https://api.rubyonrails.org/classes/ActionView/Helpers/AssetTagHelper.html) in Rails.  [`AssetTagHelper`](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) will automatically append the proper file extension for you.
+
+- favicon_link_tag(source = :favicon, rel: :icon)
+- preconnect_link_tag(source)
+- stylesheet_link_tag(source, media: :screen)
+- javascript_include_tag(source, crossorigin: :anonymous)
+
+There are also a few extras that have no parallel in Rails:
+
+- google_fonts(*fonts)
+- font_awesome(kit_id)
+
+In slim you use `==` to call these tags and output their contents directly without any HTML escaping:
+
+```slim
+/ In a .slim file
+==stylesheet_link_tag(:main)
+==javascript_include_tag(:main)
+==google_fonts('Fira Code', 'Fira Sans')
+==font_awesome('123abc')
+```
+
+### ContentFor
+
+[AssetTagHelper](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) provides its own implementation of `yield_content` and `content_for`, which is most commonly used to allow internal views to inject asset tags into the `<head>` of the layout file.  For example:
+
+```slim
+/ In layout.slim
+doctype html
+html lang="en"
+  head
+    ==yield_content :head
+  body
+    ==yield
+```
+
+```slim
+/ In view.slim
+= content_for :head
+  title This Is The Index Page
+
+/ This yields into the body
+p Hello World
+```
 
 ## Production Examples
 

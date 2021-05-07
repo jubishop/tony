@@ -1,7 +1,6 @@
 module Tony
   module AssetTagHelper
-    def favicon_link_tag(source = :favicon,
-                         rel: 'icon')
+    def favicon_link_tag(source = :favicon, rel: :icon)
       %(<link rel="#{rel}"
               href="#{Private.static_url(self, source, 'ico')}" />)
     end
@@ -12,7 +11,7 @@ module Tony
               crossorigin />)
     end
 
-    def stylesheet_link_tag(source, media: 'screen')
+    def stylesheet_link_tag(source, media: :screen)
       %(<link rel="stylesheet"
               href="#{Private.static_url(self, source, 'css')}"
               media="#{media}" />)
