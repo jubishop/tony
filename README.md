@@ -228,7 +228,7 @@ In slim you use `==` to call these tags and output their contents directly witho
 
 ### ContentFor
 
-[`Tony::AssetTagHelper`](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) provides its own implementation of `yield_content` and `content_for`, which is most commonly used to allow internal views to inject asset tags into the `<head>` of the layout file.  For example:
+[`Tony::Slim`](https://github.com/jubishop/tony/blob/master/lib/tony/slim.rb) provides its own implementation of `yield_content` and `content_for`, which is most commonly used to allow internal views to inject asset tags into the `<head>` of the layout file.  For example:
 
 ```slim
 / In layout.slim
