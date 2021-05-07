@@ -181,7 +181,7 @@ Next, use the methods provided in [`AssetTagHelper`](https://github.com/jubishop
 
 ## Rendering (Slim)
 
-`Tony` provides support for [Slim](http://slim-lang.com), but, like all parts of `Tony`, it is a standalone utility and you could easily incorporate your own rendering class instead (and `include Tony::AssetTagHelper`).
+`Tony` provides support for [Slim](http://slim-lang.com), but, like all parts of `Tony`, it is a standalone utility and you could easily incorporate your own rendering class instead.  You can `include Tony::AssetTagHelper` and `include Tony::ContentFor` to incorporate much of the same functionality.
 
 ### Tony::Slim
 
@@ -228,7 +228,7 @@ In slim you use `==` to call these tags and output their contents directly witho
 
 ### ContentFor
 
-[`Tony::Slim`](https://github.com/jubishop/tony/blob/master/lib/tony/slim.rb) provides its own implementation of `yield_content` and `content_for`, which is most commonly used to allow internal views to inject asset tags into the `<head>` of the layout file.  For example:
+[`Tony::Slim`](https://github.com/jubishop/tony/blob/master/lib/tony/slim.rb) provides its own implementation of `yield_content` and `content_for` in [`Tony::ContentFor`](https://github.com/jubishop/tony/blob/master/lib/tony/content_for.rb), which is most commonly used to allow internal views to inject asset tags into the `<head>` of the layout file.  For example:
 
 ```slim
 / In layout.slim
@@ -251,7 +251,7 @@ p Hello World
 
 ## Enforcing HTTPS
 
-`Tony` provides it's own middleware for enforcing immediate redirects to `https`.  You may ask, why not just use [`rack-ssl-enforcer`](https://github.com/tobmatth/rack-ssl-enforcer)?  Unfortunately, it is [not thread safe](https://github.com/tobmatth/rack-ssl-enforcer/pull/105) and seems to be dead.  So `Tony` provides a modern, thread-safe alternative.
+`Tony` provides its own middleware for enforcing immediate redirects to `https`.  You may ask, why not just use [`rack-ssl-enforcer`](https://github.com/tobmatth/rack-ssl-enforcer)?  Unfortunately, it is [not thread-safe](https://github.com/tobmatth/rack-ssl-enforcer/pull/105) and seems to be dead.  So `Tony` provides a modern, thread-safe alternative.
 
 Simply add [`Tony::SSLEnforcer`](https://github.com/jubishop/tony/blob/master/lib/tony/ssl_enforcer.rb) to your Rack middlewares.  You probably want it at the very top, and you may want to only apply it when in production:
 
