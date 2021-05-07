@@ -1,7 +1,6 @@
+require 'rakegem'
 require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
-
-require 'rakegem'
 
 RuboCop::RakeTask.new(:rubocop)
 RSpec::Core::RakeTask.new(:spec) { |t|

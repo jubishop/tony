@@ -263,6 +263,11 @@ use Tony::SSLEnforcer if ENV.fetch('RACK_ENV') == 'production'
 # Now add `use Tony::Static` and `run Tony::App as in other examples.`
 ```
 
+## Testing
+
+`Tony` has a sibling library: [`tony/test`](https://github.com/jubishop/tony-test) that provides helpers for testing an app written using `Tony`.
+
+
 ## Production Examples
 
 - [JubiVote](https://github.com/jubishop/jubivote)
