@@ -2,7 +2,7 @@ require 'slim'
 
 module Tony
   class Slim
-    def initialize(views:, layout: nil)
+    def initialize(views: 'views', layout: nil)
       @views = views
       @layout = if layout
                   ::Slim::Template.new("#{layout}.slim")

@@ -175,10 +175,32 @@ use Tony::Static, public_folder: `my_public_folder`
 
 ### Asset Tag Helpers
 
-Next, use the methods provided in [`AssetTagHelper`](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) to create your asset tags for `CSS`, `Javascript` etc.  These will be covered in greater detail in the [`Slim`](https://github.com/jubishop/tony#slim) rendering section below.
+Next, use the methods provided in [`AssetTagHelper`](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) to create your asset tags for `CSS`, `Javascript` etc.  These will be covered in greater detail in the [`Rendering (Slim)`](https://github.com/jubishop/tony#rendering-slim) rendering section below
 
 ## Rendering (Slim)
 
+`Tony` provides support for [Slim](http://slim-lang.com), but, like all parts of `Tony`, it is a standalone utility and you could easily incorporate your own rendering class instead (and `include Tony::AssetTagHelper`).
+
+### Tony::Slim
+
+A [`Tony::Slim`](https://github.com/jubishop/tony/blob/master/lib/tony/slim.rb) instance takes two parameters;
+
+- `views:` : The path where views are stored. (default is `views`)
+- `layout:` : The path to a layout wrapping file (optional, default is `nil`).
+
+`Tony::Slim` will automatically append the `.slim` file extension for you.
+
+```ruby
+app = Tony::App.new
+slim = Tony::Slim.new(views: 'my_views', layout: 'my_views/layout')
+
+app.get('/', ->(_, resp) {
+  # Renders `my_views/index.slim`, wrapped in `my_views/layout.slim`
+  resp.write(slim.render(:index))
+})
+```
+
+### AssetTagHelper
 
 ## Production Examples
 
