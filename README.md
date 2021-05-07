@@ -54,7 +54,7 @@ run app
 
 ## Routing
 
-`Tony` routes paths to lambdas and passes them two parameters: a `Tony::Request` and a `Tony::Response`.  These classes extend `Rack::Request` and `Rack::Response` respectively.  A simple route can be created for exact matches with a `String`, but you can also pass a `Regexp` and any `named_captures` are appended to the `.params` `Hash` inside the `Tony::Response`:
+`Tony` routes paths to lambdas and passes them two parameters: a [`Tony::Request`](https://github.com/jubishop/tony/blob/master/lib/tony/request.rb) and a [`Tony::Response`](https://github.com/jubishop/tony/blob/master/lib/tony/response.rb).  These classes extend [`Rack::Request`](https://github.com/rack/rack/blob/master/lib/rack/request.rb) and [`Rack::Response`](https://github.com/rack/rack/blob/master/lib/rack/response.rb) respectively.  A simple route can be created for exact matches with a `String`, but you can also pass a `Regexp` and any [`named_captures`](https://ruby-doc.org/core/Regexp.html#method-i-named_captures) are appended to the `.params` `Hash` inside the [`Tony::Response`](https://github.com/jubishop/tony/blob/master/lib/tony/response.rb):
 
 ```ruby
 require 'tony'
@@ -79,6 +79,46 @@ run app
 app.not_found(->(req, resp) {
   # Status will default to 404 unless you set it yourself.
   resp.write("Sorry, #{req.url} is not a valid url")
+})
+```
+
+### Catching Errors
+
+If any call raises an Error, `Tony` catches it and will calls any block passed to `error()` if one exists, adding the caught error message as `.error` to the [`Tony::Response`](https://github.com/jubishop/tony/blob/master/lib/tony/response.rb) instance.  You might want to choose to display a friendly error message in production but raise the stack trace in development.  You could do something like:
+
+```ruby
+app.error(->(_, resp) {
+  if env['APP_ENV'] == 'production'
+    resp.status = 500
+    resp.write('Sorry, an error has occurred')
+  else
+    raise resp.error
+  end
+})
+```
+
+### throw(:response)
+
+Every call is wrapped in a `catch(:response)`, which means wherever you are in the stack if you filled in your [`Tony::Response`](https://github.com/jubishop/tony/blob/master/lib/tony/response.rb), you can call `throw(:response)` to immediately unwind the stack and end execution (in Sinatra this is equivalent to the `halt()` method):
+
+```ruby
+def level_three(resp)
+  resp.write('Hello from down here!')
+  throw(:response)
+end
+
+def level_two(resp)
+  level_three(resp)
+end
+
+def level_one(resp)
+  level_two(resp)
+end
+
+app.get('/deep_stack', ->(_, resp) {
+  level_one(resp)
+  resp.404 # this won't get called because of the throw(:response).
+  resp.write('No response was found I guess')
 })
 ```
 
