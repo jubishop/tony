@@ -164,7 +164,7 @@ When `env['APP_ENV']` is anything other than `production`, [Tony::AssetTagHelper
 
 ### Tony::Static
 
-To utilize this functionality, first, add [`Tony::Static`](https://github.com/jubishop/tony/blob/master/lib/tony/static.rb) to your Rack `config.ru` file as a middleware, and optionally passing it the file location of all public assets (it defaults to the `public` folder)
+To utilize this functionality, first, add [`Tony::Static`](https://github.com/jubishop/tony/blob/master/lib/tony/static.rb) to your Rack `config.ru` file as a middleware, optionally passing it the file location of all public assets (it defaults to the `public` folder)
 
 ```ruby
 # In config.ru
