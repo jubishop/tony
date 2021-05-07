@@ -147,9 +147,38 @@ app.post('/get_cookie', ->(req, resp) {
 `Tony` provides an easy way to rotate new secrets.  Simply pass `:old_secret` to your `Tony` instance for what you've been using, and `:secret` for what you want to rotate into.
 
 ```ruby
-app = Tony.new(secret: 'THAT_NEW_NEW', old_secret: 'THE_OLD_OLD')
+app = Tony.new(secret: 'FLY_ME_TO_THE_MOON', old_secret: 'FOR_ONCE_IN_MY_LIFE')
 # Everything else works the same.
 ```
+
+## Serving Static Files
+
+`Tony` provides a static file server and an intelligent strategy for ensuring clients always cache files that haven't changed, but also always fetch them again once they have.
+
+- It passes `'public, max-age=31536000, immutable'` for the `Cache-Control` header to tell a client to always cache what its fetched.
+- It checks the `mtime` for each file (just once at launch, then it keeps the value in memory) and it appends that `mtime` to each asset url as part of a `?v=` parameter.
+
+As soon as a file has been modified, the `mtime` will change and clients will fetch the new version.  But as long as it hasn't changed, clients will use the cached version for a year (31536000 seconds).
+
+### Tony::Static
+
+To utilize this functionality, first, add [`Tony::Static`](https://github.com/jubishop/tony/blob/master/lib/tony/static.rb) to your Rack `config.ru` file as a middleware, and optionally passing it the file location of all public assets (it defaults to the `public` folder)
+
+```ruby
+# In config.ru
+
+require `tony`
+use Tony::Static, public_folder: `my_public_folder`
+
+# Now you'd create your `Tony::App` instance and `run` as in other examples.
+```
+
+### Asset Tag Helpers
+
+Next, use the methods provided in [`AssetTagHelper`](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) to create your asset tags for `CSS`, `Javascript` etc.  These will be covered in greater detail in the [`Slim`](https://github.com/jubishop/tony#slim) rendering section below.
+
+## Rendering (Slim)
+
 
 ## Production Examples
 
