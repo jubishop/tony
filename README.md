@@ -4,6 +4,8 @@
 
 A focused and straightforward Ruby web framework.
 
+![Tony](https://raw.githubusercontent.com/jubishop/tony/master/tony.jpg)
+
 ## Installation
 
 ### In a Gemfile
