@@ -144,15 +144,6 @@ app.post('/get_cookie', ->(req, resp) {
 })
 ```
 
-### Secret rotation
-
-`Tony` provides an easy way to rotate new secrets.  Simply pass `:old_secret` to your `Tony` instance for what you've been using, and `:secret` for what you want to rotate into.
-
-```ruby
-app = Tony.new(secret: 'FLY_ME_TO_THE_MOON', old_secret: 'FOR_ONCE_IN_MY_LIFE')
-# Everything else works the same.
-```
-
 ## Serving Static Files
 
 `Tony` provides a static file server and an intelligent strategy for ensuring clients always cache files that haven't changed, but also always fetch them again once they have.

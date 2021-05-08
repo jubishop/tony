@@ -3,14 +3,13 @@ require 'rack'
 
 module Tony
   class App
-    def initialize(secret: nil, old_secret: nil)
+    def initialize(secret: nil)
       @secret = secret
-      @old_secret = old_secret
       @routes = Hash.new { |hash, key| hash[key] = {} }
     end
 
     def call(env)
-      req = Request.new(env, secret: @secret, old_secret: @old_secret)
+      req = Request.new(env, secret: @secret)
       resp = Response.new(secret: @secret)
 
       @routes[req.request_method].each_value { |route|
