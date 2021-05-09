@@ -165,7 +165,8 @@ RSpec.describe(Tony::App, type: :rack_test) {
       expect(cookie.expires).to(eq(Time.at(2**31 - 1)))
     }
 
-    it('gives no cookie over http') {
+    it('gives no cookie over http in production') {
+      ENV['APP_ENV'] = 'production'
       @app = Tony::App.new(secret: 'fly_me_to_the_moon')
       app.get('/', ->(_, resp) {
         resp.set_cookie(:tony, 'bennett')
