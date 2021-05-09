@@ -50,6 +50,15 @@ RSpec.describe(Tony::Slim) {
       slim = Tony::Slim.new(views: 'spec/assets/views')
       expect(slim.render(:basic)).to(have_selector('p', text: 'Hello World'))
     }
+
+    it('renders basic view with a partial') {
+      require 'slim/include'
+      include_dir = File.join(Dir.pwd, 'spec/assets/views/partials')
+      slim = Tony::Slim.new(views: 'spec/assets/views',
+                            options: { include_dirs: [include_dir] })
+      expect(slim.render(:partial)).to(
+          have_selector('p', text: 'I am a little teapot.'))
+    }
   }
 
   context('rendering content_for') {
