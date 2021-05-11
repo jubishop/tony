@@ -11,6 +11,11 @@ module Tony
               crossorigin />)
     end
 
+    def image_tag(source, alt:)
+      %(<img src="#{Private.static_url(self, source)}"
+             alt="#{alt}" />)
+    end
+
     def stylesheet_link_tag(source, media: :screen)
       %(<link rel="stylesheet"
               href="#{Private.static_url(self, source, 'css')}"
@@ -61,10 +66,12 @@ module Tony
         end
       end
 
-      def self.static_url(app, source, ext)
+      def self.static_url(app, source, ext = nil)
+        source = source.to_s
         return source if source.start_with?('http')
 
-        source = "/#{source}.#{ext}"
+        source.prepend('/') unless source.start_with?('/')
+        source += ".#{ext}" if ext
         return "#{source}?v=#{time(app, source)}"
       end
     end

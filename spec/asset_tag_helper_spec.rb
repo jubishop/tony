@@ -18,6 +18,14 @@ RSpec.describe(Tony::AssetTagHelper) {
       HTML
     }
 
+    it('creates an image tag') {
+      tag = image_tag('tony.jpg', alt: 'hello')
+      expect(tight(tag)).to(eq(tight(<<~HTML)))
+        <img src="/tony.jpg?v=99"
+              alt="hello" />
+      HTML
+    }
+
     it('creates a stylesheet link tag') {
       tag = stylesheet_link_tag(:test)
       expect(tight(tag)).to(eq(tight(<<~HTML)))
@@ -76,6 +84,15 @@ RSpec.describe(Tony::AssetTagHelper) {
       expect(tight(favicon_link_tag)).to(eq(tight(<<~HTML)))
         <link rel="icon"
               href="/favicon.ico?v=#{mtime}" />
+      HTML
+    }
+
+    it('creates an image tag') {
+      mtime = File.mtime('spec/assets/tony.jpg').to_i
+      tag = image_tag('tony.jpg', alt: 'hello')
+      expect(tight(tag)).to(eq(tight(<<~HTML)))
+        <img src="/tony.jpg?v=#{mtime}"
+              alt="hello" />
       HTML
     }
 

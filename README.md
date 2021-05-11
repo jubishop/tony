@@ -201,6 +201,7 @@ Inside your slim template files, these methods will be provided for you, loosely
 
 - `favicon_link_tag(source = :favicon, rel: :icon)`
 - `preconnect_link_tag(source)`
+- `image_tag(source, alt:)`
 - `stylesheet_link_tag(source, media: :screen)`
 - `javascript_include_tag(source, crossorigin: :anonymous)`
 
