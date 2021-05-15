@@ -144,6 +144,16 @@ app.post('/get_cookie', ->(req, resp) {
 })
 ```
 
+### Unencrypted Cookies
+
+If you are setting plain text cookies from Javascript, you can read those by using the built in `cookies` Hash provided by [`Rack::Request`](https://github.com/rack/rack/blob/master/lib/rack/request.rb):
+
+```ruby
+app.get('/', ->(req, resp) {
+  simple_cookie = req.cookies.fetch('key', 'default_value')
+})
+```
+
 ## Serving Static Files
 
 `Tony` provides a static file server and an intelligent strategy for ensuring clients always cache files that haven't changed, but also always fetch them again once they have.
