@@ -267,10 +267,17 @@ use Tony::SSLEnforcer if ENV.fetch('RACK_ENV') == 'production'
 # Now add `use Tony::Static` and `run Tony::App as in other examples.`
 ```
 
-## Testing
+## Sibling Libraries
 
-`Tony` has a sibling library: [`tony/test`](https://github.com/jubishop/tony-test) that provides helpers for testing an app written using `Tony`.
+`Tony` has some sibling libraries that offer additional functionality:
 
+### 3rd Party Auth
+
+[`tony/auth`](https://github.com/jubishop/tony-auth) provides middleware for users to log in via 3rd party services.
+
+### Testing
+
+[`tony/test`](https://github.com/jubishop/tony-test) provides helpers for testing an app written using `Tony`.
 
 ## Production Examples
 
