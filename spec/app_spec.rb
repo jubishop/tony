@@ -162,7 +162,7 @@ RSpec.describe(Tony::App, type: :rack_test) {
       expect(get_cookie(:tony)).to(eq('bennett'))
       cookie = rack_mock_session.cookie_jar.get_cookie('tony')
       expect(cookie.path).to(eq('/'))
-      expect(cookie.expires).to(eq(Time.at(2**31 - 1)))
+      expect(cookie.expires).to(eq(Time.at((2**31) - 1)))
     }
 
     it('gives no cookie over http in production') {
