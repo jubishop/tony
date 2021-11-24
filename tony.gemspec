@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = 'tony'
-  spec.version       = '0.38'
+  spec.version       = '0.39'
   spec.summary       = %q(A focused and straightforward Ruby web framework.)
   spec.authors       = ['Justin Bishop']
   spec.email         = ['jubishop@gmail.com']
