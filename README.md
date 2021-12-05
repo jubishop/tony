@@ -283,6 +283,10 @@ use Tony::SSLEnforcer if ENV.fetch('RACK_ENV') == 'production'
 
 - [JubiVote](https://github.com/jubishop/jubivote)
 
+## More Documentation
+
+[Rubydoc](https://www.rubydoc.info/github/jubishop/tony/master)
+
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
