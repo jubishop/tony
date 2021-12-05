@@ -285,7 +285,7 @@ use Tony::SSLEnforcer if ENV.fetch('RACK_ENV') == 'production'
 
 ## More Documentation
 
-[Rubydoc](https://www.rubydoc.info/github/jubishop/tony/master)
+- [Rubydoc](https://www.rubydoc.info/github/jubishop/tony/master)
 
 ## License
 
