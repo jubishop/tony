@@ -93,7 +93,7 @@ If any call raises an Error, `Tony` will catch it and call the `error` block if 
 
 ```ruby
 app.error(->(_, resp) {
-  if env['APP_ENV'] == 'production'
+  if ENV['APP_ENV'] == 'production'
     resp.status = 500
     resp.write('Sorry, an error has occurred')
   else
@@ -163,7 +163,7 @@ app.get('/', ->(req, resp) {
 
 As soon as a file has been modified, the `mtime` will change and clients will fetch the new version.  But as long as it hasn't changed, clients will use the cached version for a year (31536000 seconds).
 
-When `env['APP_ENV']` is anything other than `production`, [Tony::AssetTagHelper](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) will instead simply append the current unix timestamp to aid in development, so you always get the latest version on refresh.
+When `ENV['APP_ENV']` is anything other than `production`, [Tony::AssetTagHelper](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) will instead simply append the current unix timestamp to aid in development, so you always get the latest version on refresh.
 
 ### Tony::Static
 
