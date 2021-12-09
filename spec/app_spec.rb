@@ -49,14 +49,14 @@ RSpec.describe(Tony::App, type: :rack_test) {
 
     it('uses error() if an exception is raised') {
       app.get('/', ->(_, _) {
-        raise StandardError, 'Whoopsydaisy'
+        raise RuntimeError, 'Hi' # rubocop:disable Style/RedundantException
       })
       app.error(->(_, resp) {
         resp.write(resp.error.message)
       })
       get '/'
       expect(last_response.status).to(be(500))
-      expect(last_response.body).to(eq('Whoopsydaisy'))
+      expect(last_response.body).to(eq('Hi'))
     }
 
     it('rewrites a getter if same path passed twice') {

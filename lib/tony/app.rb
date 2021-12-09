@@ -19,7 +19,7 @@ module Tony
         req.params.symbolize_keys!
         begin
           catch(:response) { route.block.call(req, resp) }
-        rescue StandardError => error
+        rescue Exception => error # rubocop:disable Lint/RescueException
           raise error unless @error_block
 
           resp.error = error
