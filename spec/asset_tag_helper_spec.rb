@@ -44,6 +44,25 @@ RSpec.describe(Tony::AssetTagHelper) {
     }
   }
 
+  context('external site tags') {
+    it('creates an external stylesheet link tag') {
+      tag = stylesheet_link_tag('http://jubishop.com/style.css')
+      expect(tight(tag)).to(eq(tight(<<~HTML)))
+        <link rel="stylesheet"
+              href="http://jubishop.com/style.css"
+              media="screen" />
+      HTML
+    }
+
+    it('creates an external javascript include tag') {
+      tag = javascript_include_tag('http://jubishop.com/script.js')
+      expect(tight(tag)).to(eq(tight(<<~HTML)))
+        <script src="http://jubishop.com/script.js"
+                crossorigin="anonymous"></script>
+      HTML
+    }
+  }
+
   context('env agnostic') {
     it('creates a preconnect link tag') {
       expect(tight(preconnect_link_tag('source'))).to(eq(tight(<<~HTML)))
