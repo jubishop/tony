@@ -267,6 +267,27 @@ use Tony::SSLEnforcer if ENV.fetch('RACK_ENV') == 'production'
 # Now add `use Tony::Static` and `run Tony::App as in other examples.`
 ```
 
+## Timezones
+
+`Tony` provides an easy method for getting a user's local timezone with every request.  Simply add `==timezone_script` to the `head` of your html content.  For example:
+
+```slim
+doctype html
+html lang="en"
+  head
+    ==timezone_script
+  body
+    | Hello World.
+```
+
+Then, you can access the timezone as a [TZInfo::Timezone](https://github.com/tzinfo/tzinfo) from any `Tony::Request` by merely calling the method `timezone`.  For example:
+
+```ruby
+app.post('/save', ->(req, resp) {
+  resp.write("Your current timezone is: #{req.timezone}")
+})
+```
+
 ## Sibling Libraries
 
 `Tony` has some sibling libraries that offer additional functionality:

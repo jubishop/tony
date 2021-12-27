@@ -1,4 +1,5 @@
 require 'rack'
+require 'tzinfo'
 
 module Tony
   class Request < Rack::Request
@@ -10,6 +11,12 @@ module Tony
     def get_cookie(key)
       key = key.to_s
       return crypt.de(cookies[key])
+    end
+
+    def timezone
+      @timezone ||= TZInfo::Timezone.get(cookies.fetch('tz',
+                                                       'America/Los_Angeles'))
+      return @timezone
     end
 
     private

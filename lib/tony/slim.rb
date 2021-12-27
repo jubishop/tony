@@ -21,6 +21,7 @@ module Tony
 
     class Env
       include Tony::AssetTagHelper
+      include Tony::ScriptTagHelper
       include Tony::ContentFor
 
       def initialize(**locals)
