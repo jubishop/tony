@@ -184,7 +184,7 @@ Next, use the methods provided in [`AssetTagHelper`](https://github.com/jubishop
 
 ## Rendering (Slim)
 
-`Tony` provides support for [Slim](http://slim-lang.com), but, like all parts of `Tony`, it is a standalone utility and you could easily incorporate your own rendering class instead.  You can `include Tony::AssetTagHelper` and `include Tony::ContentFor` to incorporate much of the same functionality.
+`Tony` provides support for [Slim](http://slim-lang.com), but, like all parts of `Tony`, it is a standalone utility and you could easily incorporate your own rendering class instead.  You can `include Tony::AssetTagHelper`, `include Tony::ContentFor`, and `include Tony::ScriptHelper` to incorporate much of the same functionality.
 
 ### Tony::Slim
 
@@ -230,7 +230,7 @@ In slim you use `==` to call these tags and output their contents directly witho
 ==font_awesome('123abc')
 ```
 
-### ContentFor
+### [Tony::ContentFor](https://github.com/jubishop/tony/blob/master/lib/tony/content_for.rb)
 
 [`Tony::Slim`](https://github.com/jubishop/tony/blob/master/lib/tony/slim.rb) provides its own implementation of `yield_content` and `content_for` in [`Tony::ContentFor`](https://github.com/jubishop/tony/blob/master/lib/tony/content_for.rb), which is most commonly used to allow internal views to inject asset tags into the `<head>` of the layout file.  For example:
 
@@ -253,21 +253,9 @@ html lang="en"
 p Hello World
 ```
 
-## Enforcing HTTPS
+### [Tony::ScriptHelper](https://github.com/jubishop/tony/blob/master/lib/tony/script_helper.rb)
 
-`Tony` provides its own middleware for enforcing immediate redirects to `https`.  You may ask, why not just use [`rack-ssl-enforcer`](https://github.com/tobmatth/rack-ssl-enforcer)?  Unfortunately, it is [not thread-safe](https://github.com/tobmatth/rack-ssl-enforcer/pull/105) and seems to be dead.  So `Tony` provides a modern, thread-safe alternative.
-
-Simply add [`Tony::SSLEnforcer`](https://github.com/jubishop/tony/blob/master/lib/tony/ssl_enforcer.rb) to your Rack middlewares.  You probably want it at the very top, and you may want to only apply it when in production:
-
-```ruby
-# In config.ru
-require 'tony'
-
-use Tony::SSLEnforcer if ENV.fetch('RACK_ENV') == 'production'
-# Now add `use Tony::Static` and `run Tony::App as in other examples.`
-```
-
-## Timezones
+#### Timezones
 
 `Tony` provides an easy method for getting a user's local timezone with every request.  Simply add `==timezone_script` to the `head` of your html content.  For example:
 
@@ -286,6 +274,20 @@ Then, you can access the timezone as a [TZInfo::Timezone](https://github.com/tzi
 app.post('/save', ->(req, resp) {
   resp.write("Your current timezone is: #{req.timezone}")
 })
+```
+
+## Enforcing HTTPS
+
+`Tony` provides its own middleware for enforcing immediate redirects to `https`.  You may ask, why not just use [`rack-ssl-enforcer`](https://github.com/tobmatth/rack-ssl-enforcer)?  Unfortunately, it is [not thread-safe](https://github.com/tobmatth/rack-ssl-enforcer/pull/105) and seems to be dead.  So `Tony` provides a modern, thread-safe alternative.
+
+Simply add [`Tony::SSLEnforcer`](https://github.com/jubishop/tony/blob/master/lib/tony/ssl_enforcer.rb) to your Rack middlewares.  You probably want it at the very top, and you may want to only apply it when in production:
+
+```ruby
+# In config.ru
+require 'tony'
+
+use Tony::SSLEnforcer if ENV.fetch('RACK_ENV') == 'production'
+# Now add `use Tony::Static` and `run Tony::App as in other examples.`
 ```
 
 ## Sibling Libraries

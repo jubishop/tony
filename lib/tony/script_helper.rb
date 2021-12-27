@@ -1,5 +1,5 @@
 module Tony
-  module ScriptTagHelper
+  module ScriptHelper
     def timezone_script
       return <<~JS
         <script type="text/javascript">

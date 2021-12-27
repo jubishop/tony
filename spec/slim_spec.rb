@@ -1,5 +1,6 @@
 RSpec.describe(Tony::Slim) {
   include Capybara::RSpecMatchers
+  include Tony::ScriptHelper
 
   before(:each) {
     allow(Time).to(receive(:now)).and_return(99)
@@ -69,6 +70,15 @@ RSpec.describe(Tony::Slim) {
       expect(slim.render(:content_for)).to(have_content('Fly Me To The Moon'))
       expect(slim.render(:content_for)).to(have_content('You Look Tonight'))
       expect(slim.render(:content_for)).to_not(have_content('Once In My Life'))
+    }
+  }
+
+  context('rendering timezone script tag') {
+    it('renders timezone_script script tag in header') {
+      slim = Tony::Slim.new(
+          views: 'spec/assets/views',
+          layout: 'spec/assets/views/layouts/script_helpers')
+      expect(slim.render(:basic)).to(include(timezone_script))
     }
   }
 }

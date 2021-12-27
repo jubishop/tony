@@ -1,5 +1,8 @@
 require 'tony/test'
 
+ENV['APP_ENV'] = 'test'
+ENV['RACK_ENV'] = 'test'
+
 RSpec.shared_context(:rack_test) {
   include_context(:tony_rack_test)
 
