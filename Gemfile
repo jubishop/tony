@@ -5,6 +5,7 @@ gem 'base64'
 gem 'rack'
 gem 'rack-contrib'
 gem 'slim'
+gem 'tzinfo'
 
 source 'https://www.jubigems.org' do
   gem 'core'

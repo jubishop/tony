@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = 'tony'
-  spec.version       = '0.49'
+  spec.version       = '0.51'
   spec.summary       = %q(A focused and straightforward Ruby web framework.)
   spec.authors       = ['Justin Bishop']
   spec.email         = ['jubishop@gmail.com']
@@ -19,4 +19,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency('rack')
   spec.add_runtime_dependency('rack-contrib')
   spec.add_runtime_dependency('slim')
+  spec.add_runtime_dependency('tzinfo')
 end
