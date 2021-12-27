@@ -2,6 +2,8 @@ require 'slim'
 
 module Tony
   class Slim
+    attr_accessor :views, :layout
+
     def initialize(views: 'views', layout: nil, options: {})
       @views = views
       @options = options
