@@ -304,7 +304,7 @@ use Tony::SSLEnforcer if ENV.fetch('RACK_ENV') == 'production'
 
 ## Production Examples
 
-- [JubiVote](https://github.com/jubishop/jubivote)
+- [SmallDemocracy](https://github.com/jubishop/smalldemocracy)
 
 ## More Documentation
 
