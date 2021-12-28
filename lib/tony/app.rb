@@ -24,7 +24,7 @@ module Tony
 
           resp.error = error
           resp.status = 500
-          run_block(@error_block, req, resp) if @error_block
+          run_block(@error_block, req, resp)
         end
         return resp.finish
       }
