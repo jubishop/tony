@@ -18,7 +18,11 @@ module Tony
         req.params.merge!(match.named_captures) if match.is_a?(MatchData)
         req.params.symbolize_keys!
         begin
-          catch(:response) { route.block.call(req, resp) }
+          status, message = catch(:response) { route.block.call(req, resp) }
+          if status.is_a?(Integer) && message.is_a?(String)
+            resp.status = status
+            resp.write(message)
+          end
         rescue Exception => error # rubocop:disable Lint/RescueException
           raise error unless @error_block
 

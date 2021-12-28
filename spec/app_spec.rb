@@ -28,6 +28,15 @@ RSpec.describe(Tony::App, type: :rack_test) {
       expect(last_response.body).to(eq('Heyo'))
     }
 
+    it('deals with a block returning status and message') {
+      app.get('/', ->(_, _) {
+        return [404, 'Not Found']
+      })
+      get '/'
+      expect(last_response.status).to(be(404))
+      expect(last_response.body).to(eq('Not Found'))
+    }
+
     it('catches throwing :response') {
       app.get('/', ->(_, resp) {
         resp.write('Ok')
@@ -36,6 +45,15 @@ RSpec.describe(Tony::App, type: :rack_test) {
       get '/'
       expect(last_response.status).to(be(200))
       expect(last_response.body).to(eq('Ok'))
+    }
+
+    it('catches throwing :response with status and message') {
+      app.get('/', ->(_, _resp) {
+        throw(:response, [500, 'Hello World'])
+      })
+      get '/'
+      expect(last_response.status).to(be(500))
+      expect(last_response.body).to(eq('Hello World'))
     }
 
     it('uses not_found() if route is not found') {

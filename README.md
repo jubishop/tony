@@ -76,6 +76,16 @@ app.post('/save', ->(req, resp) {
 run app
 ```
 
+### Simply Returning Status/Message
+
+You can also return a status and message directly if you prefer.
+
+```ruby
+app.get('/', ->(_, _) {
+  return [200, 'Hello World']
+})
+```
+
 ### Not Found
 
 If no path matches, `Tony` will call the `not_found` block if it exists.
@@ -102,7 +112,7 @@ app.error(->(_, resp) {
 })
 ```
 
-### throw(:response)
+### throw(:response, [status, message])
 
 Every call is wrapped in a `catch(:response)`, which means wherever you are in the stack, once you've filled in your [`Tony::Response`](https://github.com/jubishop/tony/blob/master/lib/tony/response.rb), you can call `throw(:response)` to immediately unwind the stack and respond:
 
@@ -125,6 +135,12 @@ app.get('/deep_stack', ->(_, resp) {
   resp.404 # this won't get called because of the throw(:response).
   resp.write('No response was found I guess')
 })
+```
+
+You can also add a status and message directly to the throw(:response):
+
+```ruby
+throw(:response, [404, 'Hello world'])
 ```
 
 ## Encrypted Cookies
