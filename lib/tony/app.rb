@@ -18,24 +18,19 @@ module Tony
         req.params.merge!(match.named_captures) if match.is_a?(MatchData)
         req.params.symbolize_keys!
         begin
-          status, message = catch(:response) { route.block.call(req, resp) }
-          if status.is_a?(Integer) && message.is_a?(String)
-            resp.status = status
-            resp.write(message)
-          end
+          run_block(route.block, req, resp)
         rescue Exception => error # rubocop:disable Lint/RescueException
           raise error unless @error_block
 
           resp.error = error
           resp.status = 500
-          @error_block.call(req, resp)
+          run_block(@error_block, req, resp) if @error_block
         end
-
         return resp.finish
       }
 
       resp.status = 404
-      @not_found_block&.call(req, resp)
+      run_block(@not_found_block, req, resp) if @not_found_block
       return resp.finish
     end
 
@@ -53,6 +48,16 @@ module Tony
 
     def post(path, block)
       @routes['POST'][path] = Route.new(path, block)
+    end
+
+    private
+
+    def run_block(block, req, resp)
+      status, message = catch(:response) { block.call(req, resp) }
+      return unless status.is_a?(Integer) && message.is_a?(String)
+
+      resp.status = status
+      resp.write(message)
     end
   end
 

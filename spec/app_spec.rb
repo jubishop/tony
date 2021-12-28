@@ -65,6 +65,21 @@ RSpec.describe(Tony::App, type: :rack_test) {
       expect(last_response.body).to(eq('Not Found'))
     }
 
+    it('deals with not_found() return status and message') {
+      app.not_found(->(_, _) {
+        return 404, 'Not Found'
+      })
+      get '/'
+      expect(last_response.status).to(be(404))
+      expect(last_response.body).to(eq('Not Found'))
+    }
+
+    it('returns simple 404 if route is not found with not_found()') {
+      get '/'
+      expect(last_response.status).to(be(404))
+      expect(last_response.body).to(be_empty)
+    }
+
     it('uses error() if an exception is raised') {
       app.get('/', ->(_, _) {
         raise RuntimeError, 'Hi' # rubocop:disable Style/RedundantException
@@ -75,6 +90,25 @@ RSpec.describe(Tony::App, type: :rack_test) {
       get '/'
       expect(last_response.status).to(be(500))
       expect(last_response.body).to(eq('Hi'))
+    }
+
+    it('deals with error() returning status and message') {
+      app.get('/', ->(_, _) {
+        raise RuntimeError, 'Hi' # rubocop:disable Style/RedundantException
+      })
+      app.error(->(_, resp) {
+        return 500, resp.error.message
+      })
+      get '/'
+      expect(last_response.status).to(be(500))
+      expect(last_response.body).to(eq('Hi'))
+    }
+
+    it('returns simple 500 if error is raised with no error()') {
+      app.get('/', ->(_, _) {
+        raise RuntimeError, 'Hi' # rubocop:disable Style/RedundantException
+      })
+      expect { get('/') }.to(raise_error(RuntimeError, 'Hi'))
     }
 
     it('rewrites a getter if same path passed twice') {
