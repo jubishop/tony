@@ -30,7 +30,7 @@ RSpec.describe(Tony::App, type: :rack_test) {
 
     it('deals with a block returning status and message') {
       app.get('/', ->(_, _) {
-        return [404, 'Not Found']
+        return 404, 'Not Found'
       })
       get '/'
       expect(last_response.status).to(be(404))

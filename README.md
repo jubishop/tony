@@ -82,7 +82,7 @@ You can also return a status and message directly if you prefer.
 
 ```ruby
 app.get('/', ->(_, _) {
-  return [200, 'Hello World']
+  return 200, 'Hello World'
 })
 ```
 
