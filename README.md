@@ -208,7 +208,7 @@ A [`Tony::Slim`](https://github.com/jubishop/tony/blob/master/lib/tony/slim.rb) 
 
 - `views:` : The path where views are stored. (default is `views`)
 - `layout:` : The path to a layout wrapping file (optional, default is `nil`).
-- `options:` : The "option hash" defined in `Slim` itself.  For example if you wanted to use [`partials`](https://github.com/slim-template/slim/blob/master/doc/include.md) you could pass `include_dirs` here. (optional, default is '{}').
+- `options:` : The "option hash" defined in `Slim` itself.  For example if you wanted to use [`partials`](https://github.com/slim-template/slim/blob/master/doc/include.md) you could pass `include_dirs` here. (optional, default is `{}`).
 
 `Tony::Slim` will automatically append the `.slim` file extension for you.
 
