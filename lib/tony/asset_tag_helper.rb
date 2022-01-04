@@ -22,8 +22,10 @@ module Tony
               media="#{media}" />)
     end
 
-    def javascript_include_tag(source, crossorigin: :anonymous)
-      %(<script src="#{Private.static_url(self, source, 'js')}"
+    def javascript_include_tag(source, type: 'text/javascript',
+                               crossorigin: :anonymous)
+      %(<script type="#{type}"
+                src="#{Private.static_url(self, source, 'js')}"
                 crossorigin="#{crossorigin}"></script>)
     end
 

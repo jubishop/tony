@@ -38,7 +38,17 @@ RSpec.describe(Tony::AssetTagHelper) {
     it('creates a javascript include tag') {
       tag = javascript_include_tag(:test)
       expect(tight(tag)).to(eq(tight(<<~HTML)))
-        <script src="/test.js?v=99"
+        <script type="text/javascript"
+                src="/test.js?v=99"
+                crossorigin="anonymous"></script>
+      HTML
+    }
+
+    it('creates a javascript include tag with type :module') {
+      tag = javascript_include_tag(:test, type: :module)
+      expect(tight(tag)).to(eq(tight(<<~HTML)))
+        <script type="module"
+                src="/test.js?v=99"
                 crossorigin="anonymous"></script>
       HTML
     }
@@ -57,7 +67,8 @@ RSpec.describe(Tony::AssetTagHelper) {
     it('creates an external javascript include tag') {
       tag = javascript_include_tag('http://jubishop.com/script.js')
       expect(tight(tag)).to(eq(tight(<<~HTML)))
-        <script src="http://jubishop.com/script.js"
+        <script type="text/javascript"
+                src="http://jubishop.com/script.js"
                 crossorigin="anonymous"></script>
       HTML
     }
@@ -87,7 +98,8 @@ RSpec.describe(Tony::AssetTagHelper) {
     it('includes fontawesome kits') {
       tag = font_awesome('kit123')
       expect(tight(tag)).to(eq(tight(<<~HTML)))
-        <script src="https://kit.fontawesome.com/kit123.js"
+        <script type="text/javascript"
+                src="https://kit.fontawesome.com/kit123.js"
                 crossorigin="anonymous"></script>
       HTML
     }
@@ -129,7 +141,8 @@ RSpec.describe(Tony::AssetTagHelper) {
       mtime = File.mtime('spec/assets/test.js').to_i
       tag = javascript_include_tag(:test)
       expect(tight(tag)).to(eq(tight(<<~HTML)))
-        <script src="/test.js?v=#{mtime}"
+        <script type="text/javascript"
+                src="/test.js?v=#{mtime}"
                 crossorigin="anonymous"></script>
       HTML
     }
