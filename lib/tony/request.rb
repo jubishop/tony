@@ -14,8 +14,7 @@ module Tony
     end
 
     def timezone
-      @timezone ||= TZInfo::Timezone.get(cookies.fetch('tz',
-                                                       'America/Los_Angeles'))
+      @timezone ||= TZInfo::Timezone.get(cookies.fetch('tz', 'Asia/Bangkok'))
       return @timezone
     end
 
