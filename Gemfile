@@ -12,7 +12,9 @@ source 'https://www.jubigems.org' do
 end
 
 group :development do
+  gem 'apparition', github: 'jubishop/apparition'
   gem 'capybara'
+  gem 'puma'
   gem 'rack-test'
   gem 'rake'
   gem 'rspec'

@@ -44,6 +44,11 @@ RSpec.describe(Tony::Slim) {
       expect(slim.render(:basic, name: 'Bennett')).to(
           have_content('Mr Bennett'))
     }
+
+    it('renders script tag helpers') {
+      slim = renderer('script_helpers')
+      expect(slim.render(:basic)).to(include(timezone_script))
+    }
   }
 
   context('rendering views alone') {
@@ -75,15 +80,6 @@ RSpec.describe(Tony::Slim) {
       expect(slim.render(:content_for)).to(have_content('Fly Me To The Moon'))
       expect(slim.render(:content_for)).to(have_content('You Look Tonight'))
       expect(slim.render(:content_for)).to_not(have_content('Once In My Life'))
-    }
-  }
-
-  context('rendering timezone script tag') {
-    it('renders timezone_script script tag in header') {
-      slim = Tony::Slim.new(
-          views: 'spec/assets/views',
-          layout: 'spec/assets/views/layouts/script_helpers')
-      expect(slim.render(:basic)).to(include(timezone_script))
     }
   }
 }
