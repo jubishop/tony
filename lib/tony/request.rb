@@ -37,7 +37,7 @@ module Tony
       items.uniq!
       items.compact!
       items = items.delete_if { |item| item.to_s.strip.empty? }
-      return items if items == default
+      return default if items == default
 
       throw(:response, [400, "No #{key} given"]) if items.empty?
 

@@ -212,6 +212,26 @@ RSpec.describe(Tony::App, type: :rack_test) {
       expect(last_response.status).to(be(400))
       expect(last_response.body).to(eq('No item given'))
     }
+
+    it('will use default if given') {
+      app.post('/', ->(req, _) {
+        value = req.param(:item, 'default')
+        return 200, value
+      })
+      post '/'
+      expect(last_response.status).to(be(200))
+      expect(last_response.body).to(eq('default'))
+    }
+
+    it('will accept an empty string as default') {
+      app.post('/', ->(req, _) {
+        value = req.param(:item, '')
+        return 200, value.length.to_s
+      })
+      post '/'
+      expect(last_response.status).to(be(200))
+      expect(last_response.body).to(eq('0'))
+    }
   }
 
   context('list_param') {
@@ -233,6 +253,26 @@ RSpec.describe(Tony::App, type: :rack_test) {
       post '/'
       expect(last_response.status).to(be(400))
       expect(last_response.body).to(eq('No items given'))
+    }
+
+    it('will use default if given') {
+      app.post('/', ->(req, _) {
+        value = req.list_param(:items, %w[hello world])
+        return 200, value.join(' ')
+      })
+      post '/'
+      expect(last_response.status).to(be(200))
+      expect(last_response.body).to(eq('hello world'))
+    }
+
+    it('will accept an empty array as default') {
+      app.post('/', ->(req, _) {
+        value = req.list_param(:items, [])
+        return 200, value.length.to_s
+      })
+      post '/'
+      expect(last_response.status).to(be(200))
+      expect(last_response.body).to(eq('0'))
     }
 
     it('raises 400 if list_param is not a list') {

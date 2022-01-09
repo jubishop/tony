@@ -76,6 +76,10 @@ app.post('/save', ->(req, resp) {
 run app
 ```
 
+### `param()` and `list_param()`
+
+`Tony::Request` offers two helper methods for extracting required parameters from any request:  `param(key, default = nil)` and `list_param(key, default = nil`.  They will return the given key (or default) or throw a 400 automatically if the param does not exist and no default is given.
+
 ### Simply Returning Status/Message
 
 You can also return a status and message directly if you prefer.
