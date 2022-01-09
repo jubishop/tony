@@ -76,10 +76,6 @@ app.post('/save', ->(req, resp) {
 run app
 ```
 
-### `param()` and `list_param()`
-
-`Tony::Request` offers two helper methods for extracting required parameters from any request:  `param(key, default = nil)` and `list_param(key, default = nil)`.  They will return the given key (or default) or throw a 400 automatically if the param does not exist and no default is given.  `list_param()` will demand the key be of type `Enumerable`.  It will also automatically remove any duplicate or empty entries.
-
 ### Simply Returning Status/Message
 
 You can also return a status and message directly if you prefer.
@@ -147,12 +143,18 @@ You can also add a status and message directly to the throw(:response):
 throw(:response, [404, 'Hello world'])
 ```
 
+## Tony::Request
+
+### `#param` and `#list_param`
+
+`Tony::Request` offers two helper methods for extracting required parameters from any request:  `param(key, default = nil)` and `list_param(key, default = nil)`.  They will return the given key (or default) or throw a 400 automatically if the param does not exist and no default is given.  `list_param()` will demand the key be of type `Enumerable`.  It will also automatically remove any duplicate or empty entries.
+
 ## Encrypted Cookies
 
 `Tony` provides strong `aes-256-cbc` encryption, you can see exactly how it works in [`crypt.rb`](https://github.com/jubishop/tony/blob/master/lib/tony/utils/crypt.rb).  Once you've passed a `:secret` param to your [`Tony`](https://github.com/jubishop/tony/blob/master/lib/tony/app.rb) instance, it will provide methods in the `Tony::Response` to set and encrypt cookies, and in `Tony::Request` to get and decrypt them.  If you don't pass a `:secret`, `Tony` will refuse to read or write cookies for you.  (Pro-tip:  Use [`SecureRandom`](https://ruby-doc.org/stdlib/libdoc/securerandom/rdoc/SecureRandom.html) to easily make yourself a strong secret.)
 
 ```ruby
-app = Tony.new(secret: 'PLEASE_REPLACE_THIS')
+app = Tony.new(secret: ENV.fetch('MY_COOKIE_SECRET'))
 app.post('/set_cookie', ->(_, resp) {
   resp.set_cookie('tony', 'bennett')
   resp.write('Ok I set a cookie for key: tony')
