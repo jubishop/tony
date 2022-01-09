@@ -18,25 +18,25 @@ module Tony
       return @timezone
     end
 
-    def param(req, key, default = nil)
-      if req.params[key].nil? || req.params[key].to_s.empty?
+    def param(key, default = nil)
+      if params[key].nil? || params[key].to_s.empty?
         return default unless default.nil?
 
         throw(:response, [400, "No #{key} given"])
       end
 
-      return req.params.fetch(key)
+      return params.fetch(key)
     end
 
-    def list_param(req, key, default = nil)
-      items = param(req, key, default)
+    def list_param(key, default = nil)
+      items = param(key, default)
 
       unless items.is_a?(Enumerable)
         throw(:response, [400, "Invalid #{key} given"])
       end
       items.uniq!
       items.compact!
-      items = items.delete_if { |item| item.to_s.empty? }
+      items = items.delete_if { |item| item.to_s.strip.empty? }
       return items if items == default
 
       throw(:response, [400, "No #{key} given"]) if items.empty?

@@ -1,11 +1,7 @@
 RSpec.describe(Tony::App, type: :rack_test) {
-  let(:app) { @app }
+  let(:app) { Tony::App.new }
 
   context('basic behavior') {
-    before(:each) {
-      @app = Tony::App.new
-    }
-
     it('returns default 200 status on get') {
       app.get('/', ->(_, resp) {})
       get '/'
@@ -125,7 +121,6 @@ RSpec.describe(Tony::App, type: :rack_test) {
 
   context('simple getter') {
     before(:each) {
-      @app = Tony::App.new
       app.get('/', ->(_, resp) {
         resp.write('Hello World')
         resp.status = 418
@@ -162,10 +157,6 @@ RSpec.describe(Tony::App, type: :rack_test) {
   }
 
   context('with named captures') {
-    before(:each) {
-      @app = Tony::App.new
-    }
-
     it('adds named captures to the params') {
       app.get(%r{^/artist/(?<artist>.+?)/(?<album>.+?)$}, ->(req, resp) {
         resp.write("#{req.params[:artist]}: #{req.params[:album]}")
@@ -185,7 +176,6 @@ RSpec.describe(Tony::App, type: :rack_test) {
 
   context('simple regex') {
     before(:each) {
-      @app = Tony::App.new
       app.get(%r{^/artist$}, ->(_, resp) {
         resp.write('Hello World')
       })
@@ -202,9 +192,84 @@ RSpec.describe(Tony::App, type: :rack_test) {
     }
   }
 
-  context('cookie management') {
+  context('param') {
+    it('fetches a param') {
+      app.post('/', ->(req, _) {
+        value = req.param(:item)
+        return 200, value
+      })
+      post '/', item: 'hello'
+      expect(last_response.status).to(be(200))
+      expect(last_response.body).to(eq('hello'))
+    }
+
+    it('raises 400 if param does not exist') {
+      app.post('/', ->(req, _) {
+        value = req.param(:item)
+        return 200, value
+      })
+      post '/'
+      expect(last_response.status).to(be(400))
+      expect(last_response.body).to(eq('No item given'))
+    }
+  }
+
+  context('list_param') {
+    it('fetches a list_param') {
+      app.post('/', ->(req, _) {
+        value = req.list_param(:items)
+        return 200, value.join(' ')
+      })
+      post '/', items: %w[hello world]
+      expect(last_response.status).to(be(200))
+      expect(last_response.body).to(eq('hello world'))
+    }
+
+    it('raises 400 if list_param does not exist') {
+      app.post('/', ->(req, _) {
+        value = req.list_param(:items)
+        return 200, value.join(' ')
+      })
+      post '/'
+      expect(last_response.status).to(be(400))
+      expect(last_response.body).to(eq('No items given'))
+    }
+
+    it('raises 400 if list_param is not a list') {
+      app.post('/', ->(req, _) {
+        value = req.list_param(:items)
+        return 200, value.join(' ')
+      })
+      post '/', items: 'hello'
+      expect(last_response.status).to(be(400))
+      expect(last_response.body).to(eq('Invalid items given'))
+    }
+
+    it('removes duplicate elements from list_param') {
+      app.post('/', ->(req, _) {
+        value = req.list_param(:items)
+        return 200, value.join(' ')
+      })
+      post '/', items: %w[hello hello world hello world]
+      expect(last_response.status).to(be(200))
+      expect(last_response.body).to(eq('hello world'))
+    }
+
+    it('removes empty elements from list_param') {
+      app.post('/', ->(req, _) {
+        value = req.list_param(:items)
+        return 200, value.join(' ')
+      })
+      post '/', items: ['hello', ' ', '', 'world', ' ']
+      expect(last_response.status).to(be(200))
+      expect(last_response.body).to(eq('hello world'))
+    }
+  }
+
+  context('with cookies') {
+    let(:app) { Tony::App.new(secret: 'fly_me_to_the_moon') }
+
     it('sets cookies in response in https') {
-      @app = Tony::App.new(secret: 'fly_me_to_the_moon')
       app.get('/', ->(_, resp) {
         resp.set_cookie(:tony, 'bennett')
       })
@@ -219,7 +284,6 @@ RSpec.describe(Tony::App, type: :rack_test) {
 
     it('gives no cookie over http in production') {
       ENV['APP_ENV'] = 'production'
-      @app = Tony::App.new(secret: 'fly_me_to_the_moon')
       app.get('/', ->(_, resp) {
         resp.set_cookie(:tony, 'bennett')
       })
@@ -228,7 +292,6 @@ RSpec.describe(Tony::App, type: :rack_test) {
     }
 
     it('gets cookies from request') {
-      @app = Tony::App.new(secret: 'fly_me_to_the_moon')
       app.get('/', ->(req, resp) {
         resp.write(req.get_cookie(:tony))
       })
@@ -236,9 +299,23 @@ RSpec.describe(Tony::App, type: :rack_test) {
       get '/'
       expect(last_response.body).to(eq('bennett'))
     }
+  }
 
+  context('with incorrect cookie secret') {
+    let(:app) { Tony::App.new(secret: 'for_once_in_my_life') }
+
+    it('returns empty string if your secret is wrong') {
+      app.get('/', ->(req, resp) {
+        resp.write(req.get_cookie(:tony))
+      })
+      set_cookie('tony', 'bennett')
+      get '/'
+      expect(last_response.body).to(eq(''))
+    }
+  }
+
+  context('without cookies') {
     it('raises error if you try set a cookie with no secret') {
-      @app = Tony::App.new
       app.get('/', ->(_, resp) {
         resp.set_cookie(:tony, 'bennett')
       })
@@ -246,21 +323,10 @@ RSpec.describe(Tony::App, type: :rack_test) {
     }
 
     it('raises error if you try to get a cookie with no secret') {
-      @app = Tony::App.new
       app.get('/', ->(req, resp) {
         resp.write(req.get_cookie(:tony))
       })
       expect { get('/') }.to(raise_error(ArgumentError))
-    }
-
-    it('returns empty string if your secret is wrong') {
-      @app = Tony::App.new(secret: 'for_once_in_my_life')
-      app.get('/', ->(req, resp) {
-        resp.write(req.get_cookie(:tony))
-      })
-      set_cookie('tony', 'bennett')
-      get '/'
-      expect(last_response.body).to(eq(''))
     }
   }
 }
