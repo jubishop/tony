@@ -52,13 +52,18 @@ RSpec.describe(Tony::Slim) {
       expect(slim.render(:basic)).to(have_selector('p', text: 'Hello World'))
     }
 
-    it('renders basic view with a partial') {
-      require 'slim/include'
-      include_dir = File.join(Dir.pwd, 'spec/assets/views/partials')
+    it('renders partials with local variables') {
       slim = Tony::Slim.new(views: 'spec/assets/views',
-                            options: { include_dirs: [include_dir] })
-      expect(slim.render(:partial)).to(
-          have_selector('p', text: 'I am a little teapot.'))
+                            partials: 'spec/assets/views/partials')
+      rendered_partial = slim.render(:partial, top: 'tippy_top')
+      expect(rendered_partial).to(
+          have_selector('p', text: 'This is an example of partials'))
+      expect(rendered_partial).to(
+          have_selector('p', text: 'My first name is Tony'))
+      expect(rendered_partial).to(
+          have_selector('p', text: 'My last name is Bennett'))
+      expect(rendered_partial).to(
+          have_selector('p', text: 'Variable from the top is: tippy_top'))
     }
   }
 

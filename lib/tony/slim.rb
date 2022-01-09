@@ -4,8 +4,12 @@ module Tony
   class Slim
     attr_accessor :views, :layout
 
-    def initialize(views: 'views', layout: nil, options: {})
+    def initialize(views: 'views',
+                   layout: nil,
+                   partials: 'views/partials',
+                   options: {})
       @views = views
+      @partials = partials
       @options = options
       @layout = if layout
                   ::Slim::Template.new("#{layout}.slim", @options)
@@ -16,7 +20,7 @@ module Tony
 
     def render(file, **locals)
       file = File.join(@views, "#{file}.slim")
-      env = Env.new(**locals)
+      env = Env.new(partials: @partials, options: @options, **locals)
       view = ::Slim::Template.new(file, @options).render(env)
       return @layout.render(env) { view }
     end
@@ -26,8 +30,18 @@ module Tony
       include Tony::ScriptHelper
       include Tony::ContentFor
 
-      def initialize(**locals)
+      def initialize(partials:, options:, **locals)
+        @partials = partials
+        @options = options
         @locals = locals
+      end
+
+      def partial(file, **locals)
+        file = File.join(@partials, "#{file}.slim")
+        env = Env.new(partials: @partials,
+                      options: @options,
+                      **@locals.merge(locals))
+        return ::Slim::Template.new(file, @options).render(env)
       end
 
       def method_missing(method, *args, &block)
