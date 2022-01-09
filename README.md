@@ -78,7 +78,7 @@ run app
 
 ### `param()` and `list_param()`
 
-`Tony::Request` offers two helper methods for extracting required parameters from any request:  `param(key, default = nil)` and `list_param(key, default = nil`.  They will return the given key (or default) or throw a 400 automatically if the param does not exist and no default is given.
+`Tony::Request` offers two helper methods for extracting required parameters from any request:  `param(key, default = nil)` and `list_param(key, default = nil)`.  They will return the given key (or default) or throw a 400 automatically if the param does not exist and no default is given.  `list_param()` will demand the key be of type `Enumerable`.  It will also automatically remove any duplicate or empty entries.
 
 ### Simply Returning Status/Message
 
@@ -208,10 +208,11 @@ Next, use the methods provided in [`AssetTagHelper`](https://github.com/jubishop
 
 ### Tony::Slim
 
-A [`Tony::Slim`](https://github.com/jubishop/tony/blob/master/lib/tony/slim.rb) instance takes three parameters;
+A [`Tony::Slim`](https://github.com/jubishop/tony/blob/master/lib/tony/slim.rb) instance takes four parameters;
 
 - `views:` : The path where views are stored. (default is `views`)
 - `layout:` : The path to a layout wrapping file (optional, default is `nil`).
+- `partials:` : The path where partial views are stored. (default is `views/partials`)
 - `options:` : The "option hash" defined in `Slim` itself.  For example if you wanted to use [`include`](https://github.com/slim-template/slim/blob/master/doc/include.md) you could pass `include_dirs` here. (optional, default is `{}`).
 
 `Tony::Slim` will automatically append the `.slim` file extension for you.
@@ -228,7 +229,7 @@ app.get('/', ->(_, resp) {
 
 ### Rendering partials
 
-`Tony::Slim` provides a way to render partials which allows you to pass local variables into the partial.  Specify your partials directory with a `partials: 'partials'` parameter.  Then, if you called `==partial(:my_template, some_var: 'value')` in a slim file the file `partials/my_template.slim` would be rendered and the variable `some_var` would be available inside.
+`Tony::Slim` provides a way to render partials which allows you to pass local variables into the partial.  Specify your partials directory with a `partials: 'my_partials'` parameter.  Then, if you called `==partial(:my_template, some_var: 'some_value')` inside a slim view, the file `my_partials/my_template.slim` would be rendered and the variable `some_var` would be available for reference inside the partial.
 
 ### [Tony::AssetTagHelper](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb)
 
