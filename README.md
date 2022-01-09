@@ -147,7 +147,7 @@ throw(:response, [404, 'Hello world'])
 
 ### `#param` and `#list_param`
 
-`Tony::Request` offers two helper methods for extracting required parameters from any request:  `param(key, default = nil)` and `list_param(key, default = nil)`.  They will return the given key (or default) or throw a 400 automatically if the param does not exist and no default is given.  `list_param()` will demand the key be of type `Enumerable`.  It will also automatically remove any duplicate or empty entries.
+`Tony::Request` offers two helper methods for extracting parameters from any request:  `param(key, default = nil)` and `list_param(key, default = nil)`.  They will return the given key (or default) or throw a 400 automatically if the param does not exist and no default is given.  `list_param()` will demand the key be of type `Enumerable`.  It will also automatically remove any duplicate or empty entries.
 
 ## Encrypted Cookies
 
