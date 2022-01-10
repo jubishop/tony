@@ -70,7 +70,7 @@ RSpec.describe(Tony::Slim) {
       expect(rendered_partial).to(
           have_selector('p', text: 'Variable from the top is: tippy_top'))
       expect(rendered_partial).to(
-          have_selector('.another_partial p', text: 'Hello from top partial'))
+          have_selector('.another_partial p', text: 'Hello there Tony'))
     }
   }
 
