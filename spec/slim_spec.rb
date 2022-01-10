@@ -57,7 +57,7 @@ RSpec.describe(Tony::Slim) {
       expect(slim.render(:basic)).to(have_selector('p', text: 'Hello World'))
     }
 
-    it('renders partials with local variables') {
+    it('renders partials with local variables and yields') {
       slim = Tony::Slim.new(views: 'spec/assets/views',
                             partials: 'spec/assets/views/partials')
       rendered_partial = slim.render(:partial, top: 'tippy_top')
@@ -69,6 +69,8 @@ RSpec.describe(Tony::Slim) {
           have_selector('p', text: 'My last name is Bennett'))
       expect(rendered_partial).to(
           have_selector('p', text: 'Variable from the top is: tippy_top'))
+      expect(rendered_partial).to(
+          have_selector('.another_partial p', text: 'Hello from top partial'))
     }
   }
 

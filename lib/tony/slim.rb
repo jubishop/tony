@@ -36,12 +36,12 @@ module Tony
         @locals = locals
       end
 
-      def partial(file, **locals)
+      def partial(file, **locals, &block)
         file = File.join(@partials, "#{file}.slim")
         env = Env.new(partials: @partials,
                       options: @options,
                       **@locals.merge(locals))
-        return ::Slim::Template.new(file, @options).render(env)
+        return ::Slim::Template.new(file, @options).render(env, &block)
       end
 
       def method_missing(method, *args, &block)

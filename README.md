@@ -233,6 +233,15 @@ app.get('/', ->(_, resp) {
 
 `Tony::Slim` provides a way to render partials which allows you to pass local variables into the partial.  Specify your partials directory with a `partials: 'my_partials'` parameter.  Then, if you called `==partial(:my_template, some_var: 'some_value')` inside a slim view, the file `my_partials/my_template.slim` would be rendered and the variable `some_var` would be available for reference inside the partial.
 
+You can also yield inside partials, so if you put a yield inside `my_partial.slim` and said:
+
+```ruby
+==partial(:my_partial)
+  p Hello from on top
+```
+
+The `Hello from on top` would display wherever you put the yield inside.
+
 ### [Tony::AssetTagHelper](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb)
 
 Inside your slim template files, these methods will be provided for you, loosely modeled off those provided by [`ActionView::Helpers::AssetTagHelper`](https://api.rubyonrails.org/classes/ActionView/Helpers/AssetTagHelper.html) in Rails.  [`Tony::AssetTagHelper`](https://github.com/jubishop/tony/blob/master/lib/tony/asset_tag_helper.rb) will automatically append the proper file extension for you.

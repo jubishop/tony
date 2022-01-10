@@ -12,7 +12,6 @@ RSpec.describe(Tony, type: :feature) {
       resp.write(slim.render(:basic))
     })
     app.get('/timezone', ->(req, _) {
-      puts req.timezone.utc_offset
       expect(req.timezone.utc_offset).to(eq(Time.now.utc_offset))
     })
     visit '/'
