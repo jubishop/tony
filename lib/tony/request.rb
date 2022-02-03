@@ -18,9 +18,9 @@ module Tony
       return @timezone
     end
 
-    def param(key, default = nil)
+    def param(key, default = :undef)
       if params[key].nil? || params[key].to_s.empty?
-        return default unless default.nil?
+        return default unless default == :undef
 
         throw(:response, [400, "No #{key} given"])
       end
@@ -28,7 +28,7 @@ module Tony
       return params.fetch(key)
     end
 
-    def list_param(key, default = nil)
+    def list_param(key, default = :undef)
       items = param(key, default)
 
       unless items.is_a?(Enumerable)
