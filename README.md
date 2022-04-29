@@ -313,6 +313,30 @@ app.post('/save', ->(req, resp) {
 })
 ```
 
+### Module Includes
+
+If you want to include additional functions for rendering inside your `.slim` files, include them for `Tony::Slim` and `Tony::Slim::Env`:
+
+```ruby
+module SlimHelpers
+  def say_hello
+    'Hello World'
+  end
+end
+
+Tony::Slim.include(SlimHelpers)
+Tony::Slim::Env.include(SlimHelpers)
+```
+
+Then you can use the method `SayHello` directly from your `.slim` files:
+
+```slim
+doctype html
+html lang="en"
+  body
+    ==say_hello
+```
+
 ## Enforcing HTTPS
 
 `Tony` provides its own middleware for enforcing immediate redirects to `https`.  You may ask, why not just use [`rack-ssl-enforcer`](https://github.com/tobmatth/rack-ssl-enforcer)?  Unfortunately, it is [not thread-safe](https://github.com/tobmatth/rack-ssl-enforcer/pull/105) and seems to be dead.  So `Tony` provides a modern, thread-safe alternative.
